@@ -1,0 +1,148 @@
+<--
+You just need to add below import line at the bottom of the project file and execute msbuild.exe with the /p:CopyToPublishedApplications=true parameter.
+
+<Import Project="..\..\CopyToPublishedApplications.msbuild" />
+
+add CopyToPublishedApplications parameter to msbuild command line. default value of CopyToPublishedApplications is false.
+msbuild yoursolutionfile.sln /p:OutputPath=C:\yourcioutputfolder /p:CopyToPublishedApplications=true
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <UsingTask TaskName="Microsoft.WebApplication.Build.Tasks.CopyFilesToFolders"
+               AssemblyFile="Microsoft.WebApplication.Build.Tasks.dll" />
+
+
+    <PropertyGroup>
+        <ProjectCopyOutputDirInsideProjectDefault>True</ProjectCopyOutputDirInsideProjectDefault>
+        <ProjectCopyOutputDirInsideProjectDefault Condition="'$(OutDir)' != '$(OutputPath)'" >False</ProjectCopyOutputDirInsideProjectDefault>
+        <ProjectCopyOutputDirInsideProject Condition="'$(ProjectCopyOutputDirInsideProject)' == ''">$(ProjectCopyOutputDirInsideProjectDefault)</ProjectCopyOutputDirInsideProject>
+
+        <ProjectCopyOutputDir>$(OutDir)_PublishedApplications\$(MSBuildProjectName)</ProjectCopyOutputDir>
+        <CopyToPublishedApplications Condition="'$(CopyToPublishedApplications)' == ''">False</CopyToPublishedApplications>
+        <CleanProjectOutputDir>True</CleanProjectOutputDir>
+        <CleanProjectOutputDir Condition="$(ProjectCopyOutputDirInsideProject)" >False</CleanProjectOutputDir>
+    </PropertyGroup>
+
+
+    <Target Name="ECHO">
+        <Message Text="OutDir = $(OutDir)" />
+        <Message Text="OutputPath = $(OutputPath)" />
+        <Message Text="ProjectCopyOutputDir = $(ProjectCopyOutputDir)" />
+        <Message Text="ProjectCopyOutputDirInsideProject = $(ProjectCopyOutputDirInsideProject)" />
+        <Message Text="ProjectCopyOutputDirInsideProjectDefault = $(ProjectCopyOutputDirInsideProjectDefault)" />
+        <Message Text="CopyToPublishedApplications = $(CopyToPublishedApplications)" />
+        <Message Text="CleanProjectOutputDir = $(CleanProjectOutputDir)" />
+    </Target>
+
+    <PropertyGroup>
+        <PrepareForRunDependsOn>
+            $(PrepareForRunDependsOn);
+            ECHO;
+        </PrepareForRunDependsOn>
+        <PrepareForRunDependsOn Condition="$(CopyToPublishedApplications)">
+            ECHO;
+            $(PrepareForRunDependsOn);
+            __CopyApplicationFiles;
+        </PrepareForRunDependsOn>
+    </PropertyGroup>
+
+	<PropertyGroup>
+		<CleanDependsOn>
+			$(CleanDependsOn);
+			__CleanProjectOutputDir;
+		</CleanDependsOn>
+	</PropertyGroup>
+
+	<Target Name="__CleanProjectOutputDir" Condition="$(CleanProjectOutputDir)">
+		<RemoveDir Condition="Exists($(ProjectCopyOutputDir))" Directories="$(ProjectCopyOutputDir)" ContinueOnError="true" />
+	</Target>
+
+	<Target Name="__CopyApplicationFiles" Condition="$(CopyToPublishedApplications) And '$(OutDir)' != '$(OutputPath)'" >
+		<!-- Log tasks -->
+		<Message Text="Copying Application Project Files for $(MSBuildProjectName)" />
+
+		<!-- Create the _PublishedApplications\app\ folder -->
+		<MakeDir Directories="$(ProjectCopyOutputDir)" />
+
+		<!-- Copy config files to _PublishedApplications\app\ folder -->
+		<Copy SourceFiles="$(OutDir)$(TargetFileName).config" DestinationFolder="$(ProjectCopyOutputDir)"
+			  ContinueOnError="true" SkipUnchangedFiles="true" />
+		<!-- Copy build outputs to _PublishedApplications\app\bin folder -->
+		<Copy SourceFiles="@(IntermediateAssembly)" DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="@(AddModules)"
+			  DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"
+			  DestinationFolder="$(ProjectCopyOutputDir)\%(Content.SubFolder)%(Content.RecursiveDir)"
+			  SkipUnchangedFiles="true"
+			  Condition="'$(_SGenDllCreated)'=='true'"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb"
+			  DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="true"
+			  Condition="'$(_DebugSymbolsProduced)'=='true'"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="@(DocFileItem)"
+			  DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="true"
+			  Condition="'$(_DocumentationFileProduced)'=='true'"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)"
+			  DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(ProjectCopyOutputDir)\%(Culture)\$(TargetName).resources.dll')"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
+			  DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+		<!-- copy any referenced assemblies to _PublishedApplications\app\ folder -->
+		<Copy SourceFiles="@(ReferenceCopyLocalPaths)"
+			  DestinationFiles="@(ReferenceCopyLocalPaths->'$(ProjectCopyOutputDir)\%(DestinationSubDirectory)%(Filename)%(Extension)')"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+		<!-- Copy content files recursively to _PublishedApplications\app\ folder -->
+		<Copy SourceFiles="@(Content)" Condition="'%(Content.Link)' == ''"
+			  DestinationFolder="$(ProjectCopyOutputDir)\%(Content.RelativeDir)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+		<Copy SourceFiles="@(Content)" Condition="'%(Content.Link)' != ''"
+			  DestinationFiles="$(ProjectCopyOutputDir)\%(Content.Link)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+		<!-- Copy items that have been marked to be copied to the output folder -->
+		<Copy SourceFiles="@(_SourceItemsToCopyToOutputDirectory)"
+			  DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+		<Copy SourceFiles="@(_SourceItemsToCopyToOutputDirectoryAlways)"
+			  DestinationFolder="$(ProjectCopyOutputDir)"
+			  SkipUnchangedFiles="false"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+		<!-- Copy items that need to be bin deployed to the output folder -->
+		<Copy SourceFiles="@(_binDeployableAssemblies)"
+			  DestinationFolder="$(ProjectCopyOutputDir)\%(RecursiveDir)"
+			  SkipUnchangedFiles="true"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+	</Target>
+</Project>
