@@ -1,5 +1,5 @@
 #directory locations
-$global:baseDirectory = Resolve-Path .
+$global:baseDirectory =  Resolve-Path .
 $global:outputDirectory = "$baseDirectory\out"    
 $global:publishedWebsitesDirectory = "$outputDirectory\_PublishedWebsites"
 $global:publishedApplicationsDirectory = "$outputDirectory\_PublishedApplications"

@@ -1,23 +1,31 @@
 $script:SharedConfigDir = "SharedConfiguration"
+$script:SharedSdFileName = "SharedConfiguration"
 
 function replaceAppSettingsConfig($xml, $appSettings) { 				
-	$appSettings.Keys | % {		
-		$xml.appSettings.selectsinglenode("add[@key='" + $_ + "']").value = [string]$appSettings.Item($_)			
-	}	
+	$appSettings.Keys | % {						
+		$value = [string]$appSettings.Item($_)
+		$xml.appSettings.selectsinglenode("add[@key='" + $_ + "']").value = $value
+	}		
 }
 
-function replaceConnectionsConfig($xml, $connectionStrings) { 		
+function replaceConnectionsConfig($xml, $connectionStrings) { 	
 	$connectionStrings.Keys | % {
-		$xml.connectionStrings.selectsinglenode("add[@name='" + $_ + "']").connectionString = [string]$connectionStrings.Item($_)		
+		$value = [string]$connectionStrings.Item($_)					
+		$xml.connectionStrings.selectsinglenode("add[@name='" + $_ + "']").connectionString = $value
 	}	
 }
 
 # Since the xml schema is not known, configs other than app settings and connection strings
 # use a token replacement i.e. {token}
 function replaceKeyInConfig($xml, $variables) {					
-	$data = [string]$xml.OuterXml			
-	$variables.Keys | % {						
-		$data = $data -replace "{$_}", $variables.Item($_)		
+	$data = [string]$xml.OuterXml	
+	$variables.Keys | % {
+		$value = $variables.Item($_)
+		if ($data.contains("{$_}")){
+			$data = $data -replace "{$_}", $value			
+		}else{
+			Write-Env "MISSING key: $_"
+		}
 	}	
 	return [xml]$data	
 }
@@ -27,6 +35,82 @@ $script:configUpdateMethod = @{
   "appSettings.config" = (gi function:replaceAppSettingsConfig);
   "connectionStrings.config" = (gi function:replaceConnectionsConfig);  
   "connections.config" = (gi function:replaceConnectionsConfig);  
+}
+
+function Set-SensitiveData {
+		param(
+				[parameter(Mandatory=$true)] 
+				[string]$ProjectPath,								
+				[parameter(Mandatory=$true)] 
+				[string]$Env, 
+				[parameter(Mandatory=$true)] 
+				[string]$EnvPath,
+				[string]$Version = $null
+			 )			
+
+	if (-not(Test-Path($EnvPath))) { throw "$EnvPath does not exist." }		
+ 
+	$projectName = Split-Path $ProjectPath -Leaf -Resolve
+
+	if($Version){		
+		$ProjectPath = "$ProjectPath.$Version"
+	}	
+
+	if($Version){
+		$projectName = $projectName -Replace ".$Version", ""
+	}		
+
+	$sensitiveData = Get-ChildItem -Path "$EnvPath" -Filter "$projectName*.sd"
+	if (-not($sensitiveData)){
+		Write-Env "Could not locate '$Env' sensitive data for $projectName. $EnvPath does not contain any $Env.sd files for this project." 
+		return	
+	}
+
+	$projectConfigs = @()
+	$projectConfigs += Get-ChildItem -Path $ProjectPath -Filter "*.config"
+	$possibleConfigPaths | % {
+		$configPath = "$ProjectPath\$_"
+		if (Test-Path($configPath)) {
+			$projectConfigs += Get-ChildItem -Path "$ProjectPath\$_" -Filter "*.config"
+		}		
+	}				
+	Write-Env "SUBSTITUTING for project name: $projectName" -f blue	
+	$sensitiveData | Where { $_.Name.EndsWith(".$Env.sd") } | % {
+		$config = $_.Name
+		$configPath = $_.FullName			
+		Get-Content $configPath | Out-String | Invoke-Expression				
+				
+		$projectConfigs | Where { $_ } | % {			
+			$fullName = $_.FullName
+			$name = $_.Name
+			$variableName = $_.Name -Replace ".config", ""
+			$sharedVariableName = "shared_$variableName"
+			if ($_.Name -eq "$projectName.exe.config"){
+				# MSBuild converts app.configs to {exe_name.exe.config}
+				$variableName = "app"
+				$fullName = "$ProjectPath\$projectName.exe.config"
+				$name = "projectName.exe.config"
+			}
+			elseif(Test-Path variable:$sharedVariableName){
+				Get-Content "$EnvPath\$SharedSdFileName.$Env.sd" | Out-String | Invoke-Expression
+				Write-Env "SHARED variable: $variableName for project config: $_"
+			}
+			if(Test-Path variable:$variableName) {
+				Write-Env "MATCHED variable: $variableName for project config: $_"
+				#Populate Sensitive data within the config			
+				$xml = [xml](Get-Content $fullName)	
+				$var = Get-Variable -Name $variableName -ValueOnly															
+				$var
+				if ($configUpdateMethod.ContainsKey($name)) { &$configUpdateMethod[$name] $xml $var }					
+				else { $xml = replaceKeyInConfig $xml $var }		
+				$xml.Save($fullName)
+				Write-Env "POPULATED project config: $_"
+			}					
+			else{
+				Write-Env "MISSING variable for project config: $_"
+			}
+		}					
+	}
 }
 
 function Set-EnvVariables{
@@ -196,4 +280,4 @@ function Write-Env([string] $message) {
 	Write-Host "[Env] $message" -f DarkBlue
 }
 
-Export-ModuleMember Set-EnvVariables, Invoke-TransformConfigs
+Export-ModuleMember Set-EnvVariables, Invoke-TransformConfigs, Set-SensitiveData

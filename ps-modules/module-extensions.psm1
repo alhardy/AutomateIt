@@ -1,11 +1,7 @@
 function Confirm-PsGetIsInstall{
-	param(
-			[switch]$GetLatest
-		 )
-
 	$availableModules = Get-Module -ListAvailable
 
-	if (-not($availableModules | where {$_.Name -eq "PsGet" }) -or $GetLatest) {
+	if (-not($availableModules | where {$_.Name -eq "PsGet" })) {
 		Write-Warning "Downloading PsGet"
 		(New-Object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
 		$GotLatestPsGet = $True
@@ -24,7 +20,7 @@ function Install-ModuleWithPsGet {
 			[string]$ModulePath
 		 )
 	
-	Confirm-PsGetIsInstall -GetLatest:$GetLatest.IsPresent
+	Confirm-PsGetIsInstall
 
 	$availableModules = Get-Module -ListAvailable
 	$justInstalled = $False
