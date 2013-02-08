@@ -10,7 +10,7 @@ $envVarPath = Resolve-Path C:\Source\Drive\env
 Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
 Import-Module -Name $psModuleRoot\module-extensions -Verbose -Force
 
-Install-ModuleWithPsGet -Module psake -GetLatest:$GetLatestModules.IsPresent
+Install-ModuleWithPsGet -Module psake
 Install-ModuleWithPsGet -Module env -ModulePath $psModuleRoot\env.psm1 -GetLatest:$GetLatestModules.IsPresent
 
 Invoke-Psake Configure-ForMyBox -parameters @{"Env"=$env;"EnvVarPath"=$envVarPath;"SolutionRoot"=$solutionRoot}

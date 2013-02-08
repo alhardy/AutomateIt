@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>AutomateIt</id>
+        <version>1.0.0</version>
+        <title>AutomateIt</title>
+        <authors>Allan Hardy</authors>
+        <owners>Allan Hardy</owners>
+        <projectUrl>https://github.com/alhardy/AutomateIt</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Powershell Scripts that help automate builds, testing, deployment and configuration management</description>
+        <summary>Powershell Scripts that help automate builds, testing, deployment and configuration management</summary>
+    </metadata>    
+</package>
