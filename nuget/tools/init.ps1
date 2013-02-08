@@ -37,13 +37,16 @@ if(Test-Path "$root\scripts\$scriptDirName"){
     }  
 } 
 
-if($install){
+if($install){    
     Write-Host "Copying scripts to $root\scripts\$scriptDirName"
     if(Test-Path "$root\scripts\$scriptDirName"){
         Remove-Item "$root\scripts\$scriptDirName" -Recurse
-    }else{
-        Move-Item "$toolsPath\scripts" "$root\scripts\$scriptDirName"
-    }          
+    }
+    Move-Item "$toolsPath\scripts" "$root\scripts\$scriptDirName"             
+}else{
+    if(Test-Path "$root\scripts\$scriptDirName"){
+        Remove-Item "$root\scripts\$scriptDirName" -Recurse
+    }
 }
 
 Write-Host "Complete"
