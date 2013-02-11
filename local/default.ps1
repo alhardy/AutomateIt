@@ -7,6 +7,11 @@ properties{
 task Set-IISExpress {
 	"Configuring IIS Express with local settings and running"
 
+	$iisExpressExe = '"c:\Program Files (x86)\IIS Express\iisexpress.exe"'
+	$path = Resolve-Path "C:\Source\BuildTestDeploy\BuildTestAndDeploy.Web"
+	$params = "/systray:true /config:C:\Source\BuildTestDeploy\scripts\iisexpress\applicationhost.config /site:BuildTestDeploy"
+	$command = "$iisExpressExe $params"
+	cmd /c start cmd /k "$command"
 }
 
 task Set-Environment {
@@ -31,5 +36,5 @@ task Set-Environment {
 
 task Configure-ForMyBox -depends Set-Environment, Set-IISExpress {
 	"Configuring $SolutionRoot for $Env"
-
+	
 }
