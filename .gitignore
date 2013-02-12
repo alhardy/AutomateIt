@@ -58,6 +58,7 @@ BuildTestAndDeploy.DeploymentPackageServer/Packages*/
 nuget-access-key
 env/*
 _Config/*
+packages/*
 WebExample/Web.config
 WebExample/Web.Debug.config
 WebExample/Web.Release.config
