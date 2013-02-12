@@ -56,6 +56,6 @@ UpgradeLog*
 !lib/Json35r6/Bin*/
 nuget-access-key
 env/*
-_Config/*
+_Config/
 packages/*
-/WebExample/WebExample/Web.*
+examples/WebExample/WebExample/Web.*
