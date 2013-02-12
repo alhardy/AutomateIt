@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "production", "production", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebExample", "WebExample", "{45CFDE39-47D0-455D-A5FA-BE60D4C1F9B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleExample", "ConsoleExample\ConsoleExample.csproj", "{C402A520-D825-401D-806E-CF0A9E721941}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{F5E4B826-5211-4A09-9C89-AB7A446FB070}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5E4B826-5211-4A09-9C89-AB7A446FB070}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5E4B826-5211-4A09-9C89-AB7A446FB070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C402A520-D825-401D-806E-CF0A9E721941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C402A520-D825-401D-806E-CF0A9E721941}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C402A520-D825-401D-806E-CF0A9E721941}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C402A520-D825-401D-806E-CF0A9E721941}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

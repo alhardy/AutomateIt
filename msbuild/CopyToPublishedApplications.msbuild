@@ -1,11 +1,4 @@
-<--
-You just need to add below import line at the bottom of the project file and execute msbuild.exe with the /p:CopyToPublishedApplications=true parameter.
 
-<Import Project="..\..\CopyToPublishedApplications.msbuild" />
-
-add CopyToPublishedApplications parameter to msbuild command line. default value of CopyToPublishedApplications is false.
-msbuild yoursolutionfile.sln /p:OutputPath=C:\yourcioutputfolder /p:CopyToPublishedApplications=true
--->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <UsingTask TaskName="Microsoft.WebApplication.Build.Tasks.CopyFilesToFolders"
@@ -21,6 +14,8 @@ msbuild yoursolutionfile.sln /p:OutputPath=C:\yourcioutputfolder /p:CopyToPublis
         <CopyToPublishedApplications Condition="'$(CopyToPublishedApplications)' == ''">False</CopyToPublishedApplications>
         <CleanProjectOutputDir>True</CleanProjectOutputDir>
         <CleanProjectOutputDir Condition="$(ProjectCopyOutputDirInsideProject)" >False</CleanProjectOutputDir>
+		<AppProjectOutputDir>$(TargetDir)</AppProjectOutputDir>
+		<AppProjectOutputDir Condition="'$(CopyToPublishedApplications)' == 'True'">$(ProjectCopyOutputDir)</AppProjectOutputDir>
     </PropertyGroup>
 
 
@@ -32,6 +27,7 @@ msbuild yoursolutionfile.sln /p:OutputPath=C:\yourcioutputfolder /p:CopyToPublis
         <Message Text="ProjectCopyOutputDirInsideProjectDefault = $(ProjectCopyOutputDirInsideProjectDefault)" />
         <Message Text="CopyToPublishedApplications = $(CopyToPublishedApplications)" />
         <Message Text="CleanProjectOutputDir = $(CleanProjectOutputDir)" />
+		<Message Text="AppProjectOutputDir = $(AppProjectOutputDir)" />
     </Target>
 
     <PropertyGroup>

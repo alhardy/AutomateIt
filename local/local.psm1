@@ -18,11 +18,13 @@ function Set-Environment{
 	Install-ModuleWithPsGet -Module psake
 	Install-ModuleWithPsGet -Module env -ModulePath $psModuleRoot\env.psm1 -GetLatest:$GetLatestModules.IsPresent
 
-	$configsForEnv = Resolve-Path $ProjectPath\_Config\$Env\*
+	$envConfigs = "$ProjectPath\_Config\$Env\*"
 
-	Copy-Item $configsForEnv $ProjectPath -Recurse -Force
-	
-	Set-SensitiveData -ProjectPath $ProjectPath -Env $Env -EnvPath $envVarPath 
+	if (Test-Path $envConfigs){
+		$configsForEnv = Resolve-Path $envConfigs
+		Copy-Item $configsForEnv $ProjectPath -Recurse -Force
+		Set-SensitiveData -ProjectPath $ProjectPath -Env $Env -EnvPath $envVarPath 
+	}			
 
 	Remove-Module [p]sget -ErrorAction SilentlyContinue
 	Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
