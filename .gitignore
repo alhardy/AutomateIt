@@ -45,6 +45,7 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 out/*
+examples/WebExample/out
 _PublishedApplications/*
 _PublishedWebsites/*
 [Tt]est[Rr]esult*
