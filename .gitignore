@@ -51,7 +51,6 @@ _PublishedWebsites/*
 Backup/*
 UpgradeReport*
 UpgradeLog*
-BuildTestAndDeploy.DeploymentPackageServer/Packages*/
 *.ncrunchsolution
 .idea
 !lib/Json35r6/Bin*/
@@ -59,6 +58,4 @@ nuget-access-key
 env/*
 _Config/*
 packages/*
-WebExample/Web.config
-WebExample/Web.Debug.config
-WebExample/Web.Release.config
+/WebExample/WebExample/Web.*
