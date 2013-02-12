@@ -162,7 +162,9 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Global.asax" />
-    <Content Include="CopyConfigs.ps1" />
+    <Content Include="CopyConfigs.ps1">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -230,7 +232,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>powershell.exe $(ProjectDir)\CopyConfigs.ps1 $(SolutionDir) $(ProjectName) $(ProjectDir) $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>powershell.exe $(ProjectDir)\CopyConfigs.ps1 $(SolutionDir) $(ProjectName) $(ProjectDir) $(ConfigurationName) $(WebProjectOutputDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

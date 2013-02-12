@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExample", "WebExample\WebExample.csproj", "{F5E4B826-5211-4A09-9C89-AB7A446FB070}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExample.Tests", "WebExample.Tests\WebExample.Tests.csproj", "{E6866636-9CF5-41C6-82F4-B152FEE6F251}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FBF879D2-F04A-492E-B555-FF79760965CB}"
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
@@ -40,10 +38,6 @@ Global
 		{F5E4B826-5211-4A09-9C89-AB7A446FB070}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5E4B826-5211-4A09-9C89-AB7A446FB070}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5E4B826-5211-4A09-9C89-AB7A446FB070}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6866636-9CF5-41C6-82F4-B152FEE6F251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6866636-9CF5-41C6-82F4-B152FEE6F251}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6866636-9CF5-41C6-82F4-B152FEE6F251}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6866636-9CF5-41C6-82F4-B152FEE6F251}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

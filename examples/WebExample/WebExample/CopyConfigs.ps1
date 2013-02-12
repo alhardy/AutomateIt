@@ -2,10 +2,11 @@
 [string]$SolutionDir,
 [string]$ProjectName,
 [string]$ProjectPath,
-[string]$BuildConfiguration
+[string]$BuildConfiguration,
+[string]$TargetPath
 )
 $source = Join-Path $SolutionDir Configuration\$ProjectName
-$dest = Join-Path $ProjectPath _Config
+$dest = Join-Path $TargetPath _Config
 Write-Host "copying $source to $dest"
 Copy-Item $source $dest -Recurse -Force
 
