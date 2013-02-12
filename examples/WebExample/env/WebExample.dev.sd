@@ -1,0 +1,5 @@
+$shared_connectionStrings = @{}
+
+$appSettings = @{
+	SecretKey="dev secret"
+}
