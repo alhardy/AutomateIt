@@ -30,7 +30,7 @@ function replaceKeyInConfig($xml, $variables) {
 	return [xml]$data	
 }
 
-$script:possibleConfigPaths = @("Configuration", "Config")
+$script:possibleConfigPaths = @("Configuration", "Config", "bin")
 $script:configUpdateMethod = @{
   "appSettings.config" = (gi function:replaceAppSettingsConfig);
   "connectionStrings.config" = (gi function:replaceConnectionsConfig);  
@@ -105,10 +105,7 @@ function Set-SensitiveData {
 				else { $xml = replaceKeyInConfig $xml $var }		
 				$xml.Save($fullName)
 				Write-Env "POPULATED project config: $_"
-			}					
-			else{
-				Write-Env "MISSING variable for project config: $_"
-			}
+			}								
 		}					
 	}
 }

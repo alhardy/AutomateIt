@@ -3,9 +3,9 @@ param(
 	 )
 
 $psModuleRoot = Resolve-Path ..\ps-modules
-$solutionRoot = Resolve-Path .
+$solutionRoot = Resolve-Path ..\examples\WebExample
 $env = "dev"
-$envVarPath = Resolve-Path .
+$envVarPath = Resolve-Path $solutionRoot\env
 
 Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
 Import-Module -Name $psModuleRoot\module-extensions -Verbose -Force

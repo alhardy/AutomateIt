@@ -38,7 +38,7 @@ task Set-Environment {
 	}	
 }
 
-task Configure-ForMyBox -depends Set-Environment, Set-Hosts, Set-IISExpress {
+task Configure-ForMyBox -depends Set-Environment { #, Set-Hosts, Set-IISExpress {
 	"Configuring $SolutionRoot for $Env"
 	
 }
