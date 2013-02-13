@@ -1,1 +1,1 @@
-$shared_connectionStrings = @{}
+$connectionStrings = $sharedConnectionStrings

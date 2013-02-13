@@ -75,6 +75,12 @@ function Set-SensitiveData {
 		}		
 	}				
 	Write-Env "SUBSTITUTING for project name: $projectName" -f blue	
+
+	$sharedConfiguration = "$EnvPath\$SharedSdFileName.$Env.sd"
+	if (Test-Path $sharedConfiguration)	{
+		Get-Content $sharedConfiguration | Out-String | Invoke-Expression
+	}	
+
 	$sensitiveData | Where { $_.Name.EndsWith(".$Env.sd") } | % {
 		$config = $_.Name
 		$configPath = $_.FullName			
@@ -84,17 +90,14 @@ function Set-SensitiveData {
 			$fullName = $_.FullName
 			$name = $_.Name
 			$variableName = $_.Name -Replace ".config", ""
-			$sharedVariableName = "shared_$variableName"
+
 			if ($_.Name -eq "$projectName.exe.config"){
 				# MSBuild converts app.configs to {exe_name.exe.config}
 				$variableName = "app"
 				$fullName = "$ProjectPath\$projectName.exe.config"
 				$name = "projectName.exe.config"
 			}
-			elseif(Test-Path variable:$sharedVariableName){
-				Get-Content "$EnvPath\$SharedSdFileName.$Env.sd" | Out-String | Invoke-Expression
-				Write-Env "SHARED variable: $variableName for project config: $_"
-			}
+			
 			if(Test-Path variable:$variableName) {
 				Write-Env "MATCHED variable: $variableName for project config: $_"
 				#Populate Sensitive data within the config			
