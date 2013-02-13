@@ -1,10 +1,9 @@
 param(
 		[switch]$GetLatestModules
 	 )
-$psModuleRoot = Resolve-Path ..\ps-modules
+$psModuleRoot = Resolve-Path ..\core\ps-modules
 
-. .\config.ps1
-. .\utils.ps1
+. .\build-config.ps1
 
 Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
 Import-Module -Name $psModuleRoot\module-extensions.psm1 -Verbose -Force
@@ -15,7 +14,7 @@ Install-ModuleWithPsGet -Module msbuild -ModulePath $psModuleRoot\msbuild.psm1 -
 Install-ModuleWithPsGet -Module test -ModulePath $psModuleRoot\test.psm1 -GetLatest:$GetLatestModules.IsPresent
 Install-ModuleWithPsGet -Module artifacts -ModulePath $psModuleRoot\artifacts.psm1 -GetLatest:$GetLatestModules.IsPresent
 
-Invoke-Psake PackageWithTestsAndPush-It
+Invoke-Psake ..\core\build\default.ps1 Package-It
 
 Remove-Module [p]sget -ErrorAction SilentlyContinue
 Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue

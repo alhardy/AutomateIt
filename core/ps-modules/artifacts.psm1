@@ -7,10 +7,11 @@ function Write-Artifact([string] $message) {
 
 function Throw-ArtifactError([string] $message) {
 	Write-Host "[Artifacts-Error] $message" -f darkcyan
+	exec { cmd /c exit (1) }
 }
 
 if (-not(Test-Path "$nugetExe")){
-	Write-Artifact "Downloading nuget.exe"
+	Write-Artifact "Downloading nuget.exe to $nugetExe"
 	(New-Object Net.WebClient).DownloadFile("https://nuget.org/nuget.exe", "$nugetExe")
 }
 
@@ -27,7 +28,7 @@ function Export-Artifacts{
 		 )	
 
 	if(-not(Test-Path $NuspecDirectory)){Throw-ArtifactError "$NuspecDirectory does not exist."}	
-	if(-not(Test-Path $OutputDirectory)){Throw-ArtifactError "$OutputDirectory does not exist."}	
+	if(-not(Test-Path $OutputDirectory)){Throw-ArtifactError "$OutputDirectory does not exist."}		
 
 	if (-not(Test-Path $ParentDirectoryContainingCompiledApplications)){
 		Write-Artifact "There are no applications to package in directory $ParentDirectoryContainingCompiledApplications"

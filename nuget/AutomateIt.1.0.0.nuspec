@@ -12,20 +12,19 @@
         <summary>Powershell Scripts that help automate builds, testing, deployment and configuration management</summary>
     </metadata>
     <files>
-        <file src="..\build\build.ps1" target="tools\scripts\build\build.ps1" />
-        <file src="..\build\config.ps1" target="tools\scripts\build\config.ps1" />
-        <file src="..\build\default.ps1" target="tools\scripts\build\default.ps1" />
-        <file src="..\build\utils.ps1" target="tools\scripts\build\utils.ps1" />
-        <file src="..\local\default.ps1" target="tools\scripts\local\default.ps1" />
-        <file src="..\local\setup-local.ps1" target="tools\scripts\local\setup-local.ps1" />
-        <file src="..\msbuild\CopyToPublishedApplications.msbuild" target="tools\scripts\msbuild\CopyToPublishedApplications.msbuild" />
-        <file src="..\msbuild\README.md" target="tools\scripts\msbuild\README.md" />
-        <file src="..\ps-modules\artifacts.psm1" target="tools\scripts\ps-modules\artifacts.psm1" />
-        <file src="..\ps-modules\common-utils.psm1" target="tools\scripts\ps-modules\common-utils.psm1" />
-        <file src="..\ps-modules\env.psm1" target="tools\scripts\ps-modules\env.psm1" />
-        <file src="..\ps-modules\module-extensions.psm1" target="tools\scripts\ps-modules\module-extensions.psm1" />
-        <file src="..\ps-modules\msbuild.psm1" target="tools\scripts\ps-modules\msbuild.psm1" />
-        <file src="..\ps-modules\test.psm1" target="tools\scripts\ps-modules\test.psm1" />
+        <file src="..\core\build\default.ps1" target="tools\core\build\default.ps1" />
+        <file src="..\core\build\utils.ps1" target="tools\core\build\utils.ps1" />
+        <file src="..\core\msbuild\CopyToPublishedApplications.msbuild" target="tools\core\msbuild\CopyToPublishedApplications.msbuild" />
+        <file src="..\core\ps-modules\artifacts.psm1" target="tools\core\ps-modules\artifacts.psm1" />
+        <file src="..\core\ps-modules\common-utils.psm1" target="tools\core\ps-modules\common-utils.psm1" />
+        <file src="..\core\ps-modules\env.psm1" target="tools\core\ps-modules\env.psm1" />
+        <file src="..\core\ps-modules\host-file.psm1" target="tools\core\ps-modules\host-file.psm1" />
+        <file src="..\core\ps-modules\module-extensions.psm1" target="tools\core\ps-modules\module-extensions.psm1" />
+        <file src="..\core\ps-modules\msbuild.psm1" target="tools\core\ps-modules\msbuild.psm1" />
+        <file src="..\core\ps-modules\test.psm1" target="tools\core\ps-modules\test.psm1" />
+        <file src="..\sample-scripts\build-config.ps1" target="tools\sample\build-config.ps1" />
+        <file src="..\sample-scripts\build.ps1" target="tools\sample\build.ps1" />
+        <file src="..\sample-scripts\local-env.psm1" target="tools\sample\local-env.psm1" />
         <file src="tools\init.ps1" target="tools\init.ps1" />
         <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
     </files>

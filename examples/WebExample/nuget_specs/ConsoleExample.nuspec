@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ConsoleExample</id>
+    <title>Console Website</title>
+    <version>$version$</version>
+    <authors>Allan Hardy</authors>
+    <owners>Allan Hardy</owners>
+    <projectUrl>http://example.com.au/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Template Project to test builds and deployment</description>
+  </metadata>
+</package>

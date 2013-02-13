@@ -1,5 +1,5 @@
 #directory locations
-$global:baseDirectory =  Resolve-Path ../examples/WebExample
+$global:baseDirectory =  Resolve-Path ../../
 $global:outputDirectory = "$baseDirectory\out"    
 $global:publishedWebsitesDirectory = "$outputDirectory\_PublishedWebsites"
 $global:publishedApplicationsDirectory = "$outputDirectory\_PublishedApplications"
@@ -27,5 +27,5 @@ $global:buildConfiguration = "Release"
 $global:runCodeAnalaysis = $false
 
 #netfx and visual studio
-$global:vsVersion = "10.0"
-$global:netfxVersion = "v4.0.30319"
+$global:vsVersion = "10.0" # used to determin mstest installation path
+$global:netfxVersion = "v4.0.30319" # used to determine msbuild installation path

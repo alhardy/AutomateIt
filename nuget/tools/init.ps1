@@ -17,7 +17,7 @@ if(Test-Path "$root\scripts\$scriptDirName"){
     $message = "Do you want to replace files in $root\scripts\$scriptDirName?"
 
     $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", `
-    "Replaces all the files in the folder."
+    "Replaces all the files in the folder retaining the custom directory."
 
     $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", `
     "Retains all the files in the folder."
@@ -37,12 +37,17 @@ if(Test-Path "$root\scripts\$scriptDirName"){
     }  
 } 
 
-if($install){    
+if($install){       
     Write-Host "Copying scripts to $root\scripts\$scriptDirName"
     if(Test-Path "$root\scripts\$scriptDirName"){
         Remove-Item "$root\scripts\$scriptDirName" -Recurse
     }
-    Move-Item "$toolsPath\scripts" "$root\scripts\$scriptDirName"             
+    Move-Item "$toolsPath\scripts" "$root\scripts\$scriptDirName"
+    
+    if(-not(Test-Path "$root\scripts\$scriptDirName\custom")){   
+        New-Item "$root\scripts\$scriptDirName\custom" -Type Directory
+        Copy-Item "$root\scripts\$scriptDirName\sample-scripts\*" "$root\scripts\$scriptDirName\custom"
+    }
 }else{
     if(Test-Path "$root\scripts\$scriptDirName"){
         Remove-Item "$root\scripts\$scriptDirName" -Recurse
