@@ -29,12 +29,12 @@ task Set-Environment {
 	Write-Host "Found $count projects, updating config files with '$env' settings" -f yellow
 
 	$projects.Keys | % {		
-		Set-EnvVariables -ProjectPath $projects[$_] -Env $env -EnvPath $envVarPath
+		Set-SensitiveData -ProjectPath $projects[$_] -Env $env -EnvPath $envVarPath
 	}
 
 	# Set environment variables on shared configs if they exist
 	if (Test-Path($projectsSharedConfigs)) {
-		Set-EnvVariables -ProjectPath $projectsSharedConfigs -Env $env -EnvPath $envVarPath 
+		Set-SensitiveData -ProjectPath $projectsSharedConfigs -Env $env -EnvPath $envVarPath 
 	}	
 }
 
