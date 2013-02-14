@@ -1,3 +1,5 @@
+The idea behind AutomateIt is to quickly perform automated builds, tests, artifact packaging and replacement of sensitive data you want to keep out of source control. AutomateIt also has the ability to push generated artifacts  to a nuget repository, perform configuration transforms and sensitive data replacement on deploy rather than build and helps with automating deployments.
+
 **Installation**
 
 Open an new shell, cd to the packages directory in the root of your solution execute the following commands
@@ -14,15 +16,15 @@ Open a new powershell instance run the following in the root of your workspace
 
 	> .\scripts\AutomateIt\custom\build.ps1
 
-This will by default build, test and package all projects reference by solutions in the root of you workspace. If multiple solutions exist in your workspace open *.\scripts\AutomateIt\custom\build-config.ps1* and adjust the *$global:solutions* variable to include any other solutions you wish to build.
+This will by default build, test and package all projects referenced by solutions in the root of you workspace. If multiple solutions exist in your workspace open *.\scripts\AutomateIt\custom\build-config.ps1* and adjust the *$global:solutions* variable to include any other solutions you wish to build.
 
-By default artifacts will be generated as zip files located in the out directory in the root of your solution.
+By default artifacts will be generated as zip files located in the *out* directory in the root of your workspace.
 
 **Building non-web applications**
 
 By default web projects import an msbuild target to publish web applications to a web *_PublishedWebsites*  directory in the OutDir specified when running MSBuild. Any other project type however does not have this ability by default.
 
-To package artifacts when compiling multiple projects this is necessary to generate project specific artifacts. For example if a solution contained mulitple web projects running MsBuild on the solution would result in
+To package artifacts when compiling multiple projects this is necessary to generate project specific artifacts. For example if a solution contained mulitple web projects, running MsBuild on the solution would result in
 
 `{OutDir}/_PublishedWebsites/WebProject1`
 
