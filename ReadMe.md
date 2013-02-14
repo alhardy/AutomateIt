@@ -14,8 +14,8 @@ installIt.ps1 will copy the required scripts to the root of your solution. This 
 
 The directory structure the install creates is
 
-`.\scripts\AutomateIt\core'
-'.\scripts\AutomateIt\custom'
+`.\scripts\AutomateIt\core`
+`.\scripts\AutomateIt\custom`
 
 Core contains scripts which should not be edited, when a new version of AutomateIt is installed these scripts will be overwritten. Scripts contained in the custom directory includes samples scripts which can be customised to suit your needs and will not be overwritten upon installing another version.
 	  
