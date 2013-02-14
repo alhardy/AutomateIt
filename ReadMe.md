@@ -49,6 +49,20 @@ Now when building with AutomateIt the script will generate a *_PublishedApplicat
 
 **Versioning**
 
+AutomateIt will automatically append a build number if one is provided in a *buildNumber* environment variable when the build script is executed otherwise no build number will be appended to the version specified in you GlobalAssemblyInfo.cs.
+
+The path of your GlobalAssemblyInfo.cs can be set by modifying the *$global:globalAssemblyInfoFile* variable which is by default set to the root of your workspace. 
+
+The GlobalAssemblyInfo.cs file should be added as a linked file to the properties folder of every project in your solution to global set the assembly version.
+
+To increment your global assembly version before say a release the following command can be run from your workspace root
+
+`> Import-Module semver`
+
+`> Bump-Version -Directory . -Part {Part} # Part options are Major, Minor or Path. Build numbers should not be manually incremented` 
+
+Automated builds append build numbers in the following format for example 1.0.0+build.10
+
 **Nuget vs Zip Artifacts**
 
 **Removing Sensitive Data**

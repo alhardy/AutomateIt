@@ -1,5 +1,5 @@
 #directory locations
-$global:baseDirectory =  Resolve-Path ../../
+$global:baseDirectory =  Resolve-Path ../examples/AutomateIt.Example
 $global:outputDirectory = "$baseDirectory\out"    
 $global:publishedWebsitesDirectory = "$outputDirectory\_PublishedWebsites"
 $global:publishedApplicationsDirectory = "$outputDirectory\_PublishedApplications"
@@ -22,7 +22,7 @@ $global:nugetInstallSource = "http://local.nuget.com.au/nuget"
 
 #solution and build
 $global:solutions = @("$baseDirectory\*.sln")
-$global:globalAssemblyInfoFile = "$baseDirectory\GlobalAssemblyInfo.cs"
+$global:globalAssemblyInfoFile = "$baseDirectory"
 $global:buildConfiguration = "Release"
 $global:runCodeAnalaysis = $false
 
