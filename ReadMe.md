@@ -1,6 +1,6 @@
 The idea behind AutomateIt is to quickly perform automated builds, tests, artifact packaging and replacement of sensitive data you want to keep out of source control. AutomateIt also has the ability to push generated artifacts  to a nuget repository, perform configuration transforms and sensitive data replacement on deploy rather than build and helps with automating deployments.
 
-The source contains an example solution demoonstrating these features.
+The source contains an example solution demonstrating these features.
 
 **Installation**
 
