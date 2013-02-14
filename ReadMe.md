@@ -14,7 +14,7 @@ Open a new powershell instance run the following in the root of your workspace
 
 	> .\scripts\AutomateIt\custom\build.ps1
 
-This will by default build, test and package all solutions in the root of you workspace. If multiple solutions exist in your workspace open *.\scripts\AutomateIt\custom\build-config.ps1* and adjust the *$global:solutions* variable to include any other solutions you wish to build.
+This will by default build, test and package all projects reference by solutions in the root of you workspace. If multiple solutions exist in your workspace open *.\scripts\AutomateIt\custom\build-config.ps1* and adjust the *$global:solutions* variable to include any other solutions you wish to build.
 
 By default artifacts will be generated as zip files located in the out directory in the root of your solution.
 
