@@ -45,7 +45,6 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 out/*
-examples/WebExample/out
 _PublishedApplications/*
 _PublishedWebsites/*
 [Tt]est[Rr]esult*
@@ -57,6 +56,6 @@ UpgradeLog*
 !lib/Json35r6/Bin*/
 nuget-access-key
 env/*
-_Config/
 packages/*
-examples/WebExample/WebExample/Web.*
+nuget.exe
+out/
