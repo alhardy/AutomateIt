@@ -36,8 +36,10 @@ To achieve the same affect for all other applications AutomateIt includes a cust
 
 Now when building with AutomateIt the script will generate a *_PublishedApplications* directory containing all compiled Non-Web applications.
 
-todo: add notes about zip artifacts by default and give directions on nuget packages
-todo: give directions on versioning
-todo: give directions on creating artifacts for console applications
-todo: give directions on removing sensitive data
-	
+**Versioning**
+
+**Nuget vs Zip Artifacts**
+
+**Removing Sensitive Data**
+
+**Pushing Artifacts to a Nuget Repository**
