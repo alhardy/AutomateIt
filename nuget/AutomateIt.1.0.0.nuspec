@@ -25,7 +25,6 @@
         <file src="..\sample-scripts\build-config.ps1" target="tools\sample\build-config.ps1" />
         <file src="..\sample-scripts\build.ps1" target="tools\sample\build.ps1" />
         <file src="..\sample-scripts\local-env.psm1" target="tools\sample\local-env.psm1" />
-        <file src="tools\init.ps1" target="tools\init.ps1" />
-        <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
+        <file src="tools\installIt.ps1" target="tools\installIt.ps1" />        
     </files>
 </package>
