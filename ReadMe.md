@@ -61,8 +61,6 @@ To increment your global assembly version before say a release the following com
 
 `> Bump-Version -Directory . -Part {Part} # Part options are Major, Minor or Path. Build numbers should not be manually incremented` 
 
-Automated builds append build numbers in the following format for example 1.0.0+build.10
-
 **Nuget vs Zip Artifacts**
 
 **Removing Sensitive Data**

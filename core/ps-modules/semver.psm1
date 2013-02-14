@@ -105,12 +105,11 @@ function Get-AssemblyInfoVersion
 										  foreach {$_.Groups } | 
 										  Select-Object -Skip 1
  
- 	$buildValue = [string]$build.Value.Replace("+build", "") 	
 	return New-Object PSObject -Property @{
 		Minor = $minor.Value
 		Major = $major.Value
 		Patch = $patch.Value
-		Build = $buildValue
+		Build = $build.Value
 	}
 }
  
@@ -130,7 +129,7 @@ function Update-AssemblyInfoVersion
 	$version = ("{0}.{1}.{2}" -f $bumpedVersion.Major, $bumpedVersion.Minor, $bumpedVersion.Patch)
 	if($bumpedVersion.Build)
 	{
-		$version = "{0}+build.{1}" -f $version, $bumpedVersion.Build
+		$version = "{0}.{1}" -f $version, $bumpedVersion.Build
 	}
  
 	$assemblyVersion = 'AssemblyVersion("' + $version + '")'

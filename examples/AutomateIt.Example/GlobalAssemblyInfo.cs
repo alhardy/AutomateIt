@@ -3,5 +3,5 @@ using System.Reflection;
 [assembly: AssemblyProduct("AutomateItExample")]
 [assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCopyright("Copyright (c) AutomateItExample 2013")]
-[assembly: AssemblyVersion("3.3.4+build.1")]
-[assembly: AssemblyFileVersion("3.3.4+build.1")]
+[assembly: AssemblyVersion("1.0.0.1")]
+[assembly: AssemblyFileVersion("1.0.0.1")]
