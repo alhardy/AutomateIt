@@ -11,6 +11,13 @@ Open an new shell, cd to the packages directory in the root of your solution exe
 	> .\installIt.ps1
 	  
 installIt.ps1 will copy the required scripts to the root of your solution. This step could be accomplished using init.ps1 within the nuget package and installed within Visual Studio, however this would require the solution to be contained in the root of your workspace.
+
+The directory structure the install creates is
+
+`.\scripts\AutomateIt\core'
+'.\scripts\AutomateIt\custom'
+
+Core contains scripts which should not be edited, when a new version of AutomateIt is installed these scripts will be overwritten. Scripts contained in the custom directory includes samples scripts which can be customised to suit your needs and will not be overwritten upon installing another version.
 	  
 **Using AutomateIt to build your solution**
 
