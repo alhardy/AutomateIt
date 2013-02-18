@@ -59,7 +59,7 @@ To increment your global assembly version before say a release the following com
 
 `> Import-Module semver`
 
-`> Bump-Version -Directory . -Part {Part} # Part options are Major, Minor or Patch. Build numbers should not be manually incremented` 
+`> Bump-Version -Part {Part} # Part options are Major, Minor or Patch. Build numbers should not be manually incremented` 
 
 **Nuget vs Zip Artifacts**
 
