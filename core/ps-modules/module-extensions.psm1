@@ -3,8 +3,11 @@ function Confirm-PsGetIsInstall{
 
 	if (-not($availableModules | where {$_.Name -eq "PsGet" })) {
 		Write-Warning "Downloading PsGet"
-		#TODO: Add default network credentails
-		(New-Object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+		$proxy = [System.Net.WebRequest]::GetSystemWebProxy()
+		$proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+		$wc = new-object system.net.WebClient
+		$wc.proxy = $proxy
+		$wc.DownloadString("http://psget.net/GetPsGet.ps1") | iex
 		$GotLatestPsGet = $True
 	}
 
