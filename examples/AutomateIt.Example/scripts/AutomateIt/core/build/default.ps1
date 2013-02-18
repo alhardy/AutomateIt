@@ -2,7 +2,7 @@
 . .\utils.ps1
 
 #locals
-$script:version = getVersion
+$script:version = Get-GlobalAssemblyInfoVersionString -Directory $globalAssemblyInfoFile
 $script:nugetAccessKey = getNugetAccessKey($nugetAccessKeyPath)
 
 task Initialise-It {
@@ -44,9 +44,14 @@ task PackageWithTestsAndPush-It -depends Test-It, PackageAndPush-It { }
 task Version-It -depends Initialise-It {
     "Versioning..."   
     
-    if (Test-Path $globalAssemblyInfoFile){
-		Update-GlobalAssemblyVersion $globalAssemblyInfoFile $version $buildConfiguration    
-    } else{
-    	Write-Warning "Could not find GlobalAssemblyInfo.cs. Global Assembly version has not been updated."
-    } 
+    $BuildNumber = 0
+    if ((Get-Item env:$buildNumberEnv).Value){
+        $BuildNumber = (Get-Item env:$buildNumberEnv).Value
+        Set-GlobalAssemblyFileVersion -BuildVersion $BuildNumber -Directory $globalAssemblyInfoFile
+    }
+    if ((Get-Item env:$buildTimeStampEnv).Value){
+        $BuildNumber += "." + (Get-Item env:$buildTimeStampEnv).Value
+    }
+
+    Set-GlobalAssemblyInfoBuildVersion -BuildVersion $BuildNumber -Directory $globalAssemblyInfoFile 
 }

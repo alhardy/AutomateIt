@@ -26,6 +26,10 @@ $global:globalAssemblyInfoFile = "$baseDirectory\GlobalAssemblyInfo.cs"
 $global:buildConfiguration = "Release"
 $global:runCodeAnalaysis = $false
 
+#environment variables
+$global:buildNumberEnv = "bamboo.buildNumber"
+$global:buildTimeStampEnv = "bamboo.buildTimeStamp"
+
 #netfx and visual studio
 $global:vsVersion = "10.0" # used to determin mstest installation path
 $global:netfxVersion = "v4.0.30319" # used to determine msbuild installation path

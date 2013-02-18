@@ -12,6 +12,7 @@ function Throw-ArtifactError([string] $message) {
 
 if (-not(Test-Path "$nugetExe")){
 	Write-Artifact "Downloading nuget.exe to $nugetExe"
+	#TODO: Add default network credentails
 	(New-Object Net.WebClient).DownloadFile("https://nuget.org/nuget.exe", "$nugetExe")
 }
 

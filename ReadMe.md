@@ -49,17 +49,19 @@ Now when building with AutomateIt the script will generate a *_PublishedApplicat
 
 **Versioning**
 
-AutomateIt will automatically append a build number if one is provided in a *buildNumber* environment variable when the build script is executed otherwise no build number will be appended to the version specified in you GlobalAssemblyInfo.cs.
+AutomateIt will append a build number to the Global Assembly Info's Assembly File Version if one is provided in a *buildNumber* environment variable. The name of the environment variable used can be updated in the build configuration script > `custom/build-config.ps1`, the name of the variable is `$global.buildNumberEnv`. You will also notice a variable to configure the build time stamp i.e. `$global.buildTimeStampEnv`, if an environment variable exists with the configured value the Global Assembly Info's Assembly Informational Version will include this value in the format of `{major}.{minor}.{patch}.+build.{buildNumber}.{buildTimeStamp}`.
 
-The path of your GlobalAssemblyInfo.cs can be set by modifying the *$global:globalAssemblyInfoFile* variable which is by default set to the root of your workspace. 
+The environment variables can be set to those given access by your build server.
+
+The path of your GlobalAssemblyInfo.cs can be set by modifying the `$global:globalAssemblyInfoFile` variable which is by default set to the root of your workspace. 
 
 The GlobalAssemblyInfo.cs file should be added as a linked file to the properties folder of every project in your solution to global set the assembly version.
 
-To increment your global assembly version before say a release the following command can be run from your workspace root
+To increment your global assembly version before say a release the following command can be run from the directory containing your GlobalAssemblyInfo.cs file.
 
 `> Import-Module semver`
 
-`> Bump-Version -Directory . -Part {Part} # Part options are Major, Minor or Path. Build numbers should not be manually incremented` 
+`> Bump-Version -Part {Part} # Part options are Major, Minor or Patch.`
 
 **Nuget vs Zip Artifacts**
 
