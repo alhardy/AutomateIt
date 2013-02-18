@@ -22,6 +22,7 @@
         <file src="..\core\ps-modules\module-extensions.psm1" target="tools\core\ps-modules\module-extensions.psm1" />
         <file src="..\core\ps-modules\msbuild.psm1" target="tools\core\ps-modules\msbuild.psm1" />
         <file src="..\core\ps-modules\test.psm1" target="tools\core\ps-modules\test.psm1" />
+		<file src="..\core\ps-modules\semver.psm1" target="tools\core\ps-modules\semver.psm1" />
         <file src="..\sample-scripts\build-config.ps1" target="tools\sample\build-config.ps1" />
         <file src="..\sample-scripts\build.ps1" target="tools\sample\build.ps1" />
         <file src="..\sample-scripts\local-env.psm1" target="tools\sample\local-env.psm1" />

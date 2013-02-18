@@ -4,7 +4,7 @@ $scriptDirName = "AutomateIt"
 
 if(-not(Test-Path $root\env)){
     Write-Host "Creating env directory..."
-    New-Item -Path $root\env -Type Directory
+    New-Item -Path env -Type Directory
 }
 if(-not(Test-Path "$root\scripts")){
     New-Item -Path "$root\scripts" -Type Directory
