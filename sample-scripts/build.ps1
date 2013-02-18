@@ -15,7 +15,7 @@ Install-ModuleWithPsGet -Module test -ModulePath $psModuleRoot\test.psm1 -GetLat
 Install-ModuleWithPsGet -Module artifacts -ModulePath $psModuleRoot\artifacts.psm1 -GetLatest:$GetLatestModules.IsPresent
 Install-ModuleWithPsGet -Module semver -ModulePath $psModuleRoot\semver.psm1 -GetLatest:$GetLatestModules.IsPresent
 
-Invoke-Psake ..\core\build\default.ps1 Package-It
+Invoke-Psake build-default.ps1 Initialise-It
 
 Remove-Module [p]sget -ErrorAction SilentlyContinue
 Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
