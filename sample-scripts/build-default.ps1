@@ -15,15 +15,13 @@ task Test-It -depends Build-It {
 }
 
 task NugetPack-It -depends Test-It {    
-    Export-NugetArtifacts -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory -Version $version
-    Export-NugetArtifacts -PublishedApplicationsDirectory $publishedWebsitesDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory -Version $version
+    Export-BuildArtifactsAsNuget -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory
 }
 
 task Zip-It -depends Test-It {
-	Export-ZipArtifacts -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -OutputDirectory $artifactsDirectory -Version $version	
-	Export-ZipArtifacts -PublishedApplicationsDirectory $publishedWebsitesDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -OutputDirectory $artifactsDirectory -Version $version
+	Export-BuildArtifactsAsZip -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -OutputDirectory $artifactsDirectory	
 }
 
-task NugetPackAndPush-It -depends Package-It {	
-    Publish-NugetArtifacts -AccessKey $nugetAccessKey -Source $nugetSource -ArtifactDirectory $artifactsDirectory
+task PackageAndNugetPush-It -depends NugetPack-It {	
+    Publish-NugetBuildArtifacts -AccessKey $nugetAccessKey -Source $nugetSource -ArtifactDirectory $artifactsDirectory
 }

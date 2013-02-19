@@ -45,10 +45,11 @@ function Export-ZipArtifacts{
     $folder = $fc.getfolder($ParentDirectoryContainingCompiledApplications)
     Write-Artifact "Zipping applications in $ParentDirectoryContainingCompiledApplications"
 	foreach($app in $folder.subfolders) {									
-		Write-Artifact "Zipping" $app.Name "-version:" $Version
+		Write-Artifact "Zipping $app.Name version: $Version"
 		$appZipName = $app.Name, $Version, "zip" -Join "."
-		$zipFile = $OutputDirectory, $appZipName
-		New-Zip -Source $app.Path -ZipFile $zipFile -Recurse -DeleteAfterZip
+		$zipFile = $OutputDirectory, $appZipName -Join "\"
+		Add-Type -Path "$scriptPath.\ICSharpCode.SharpZipLib.dll"
+		New-Zip -Source $app.Path -ZipFile $zipFile -Recurse
 	}
 	Write-Artifact "Finished zipping applications in $ParentDirectoryContainingCompiledApplications"
 

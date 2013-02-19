@@ -90,7 +90,33 @@ function Start-Build {
     Remove-Module [m]sbuild
 }
 
-function Export-BuildArtifacts { 
+function Export-BuildArtifactsAsZip{
+    param(
+            [parameter(Mandatory=$true)]            
+            [string]$PublishedApplicationsDirectory,
+            [parameter(Mandatory=$true)]            
+            [string]$PublishedWebsitesDirectory,            
+            [parameter(Mandatory=$true)]
+            [string]$OutputDirectory            
+         )  
+
+    Write-Host "Packaging artifacts as zips..." 
+
+    Import-Module $scriptPath\semver.psm1
+    $version = Get-GlobalAssemblyInfoFileVersionString -Directory $globalAssemblyInfoFile
+    Remove-Module [s]emver
+
+    if(-not($version)) { Write-Error "Version information is missing" }
+    
+    Import-Module $scriptPath\artifacts.psm1
+
+    Export-ZipArtifacts -ParentDirectoryContainingCompiledApplications $PublishedApplicationsDirectory -OutputDirectory $OutputDirectory -Version $version
+    Export-ZipArtifacts -ParentDirectoryContainingCompiledApplications $PublishedWebsitesDirectory -OutputDirectory $OutputDirectory -Version $version    
+
+    Remove-Module [a]rtifacts
+}
+
+function Export-BuildArtifactsAsNuget { 
     param(
             [parameter(Mandatory=$true)]            
             [string]$PublishedApplicationsDirectory,
@@ -99,25 +125,26 @@ function Export-BuildArtifacts {
             [parameter(Mandatory=$true)] 
             [string]$NuspecDirectory,
             [parameter(Mandatory=$true)]
-            [string]$OutputDirectory,
-            [parameter(Mandatory=$true)]
-            [string]$Version
+            [string]$OutputDirectory            
          )  
 
     Write-Host "Packaging artifacts as nupkgs..." 
 
-    if(-not($Version)) { Write-Error "Cannot package nupkgs, version information is missing" }
+    Import-Module $scriptPath\semver.psm1
+    $version = Get-GlobalAssemblyInfoVersionString -Directory $globalAssemblyInfoFile
+    Remove-Module [s]emver
+
+    if(-not($version)) { Write-Error "Cannot package nupkgs, version information is missing" }
     
     Import-Module $scriptPath\artifacts.psm1
 
-
-    Export-Artifacts -ParentDirectoryContainingCompiledApplications $PublishedApplicationsDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $Version
-    Export-Artifacts -ParentDirectoryContainingCompiledApplications $PublishedWebsitesDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $Version    
+    Export-NugetArtifacts -ParentDirectoryContainingCompiledApplications $PublishedApplicationsDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $version
+    Export-NugetArtifacts -ParentDirectoryContainingCompiledApplications $PublishedWebsitesDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $version    
 
     Remove-Module [a]rtifacts
 }
 
-function Publish-BuildArtifacts {
+function Publish-NugetBuildArtifacts {
     param(
             [parameter(Mandatory=$true)] 
             [string]$Source,
@@ -131,12 +158,12 @@ function Publish-BuildArtifacts {
     Import-Module $scriptPath\artifacts.psm1
 
     if($nugetAccessKey){
-        Publish-Artifacts -AccessKey $nugetAccessKey -Source $Source -ArtifactDirectory $ArtifactDirectory
+        Publish-NugetArtifacts -AccessKey $nugetAccessKey -Source $Source -ArtifactDirectory $ArtifactDirectory
     }else {
-        Publish-Artifacts -Source $Source -ArtifactDirectory $ArtifactDirectory
+        Publish-NugetArtifacts -Source $Source -ArtifactDirectory $ArtifactDirectory
     }
 
     Remove-Module [a]rtifacts
 }
 
-Export-ModuleMember Initialize-Build, Version-Build, Set-BuildVersion, Test-Build, Start-Build, Export-BuildArtifacts, Publish-BuildArtifacts
+Export-ModuleMember Initialize-Build, Version-Build, Set-BuildVersion, Test-Build, Start-Build, Export-BuildArtifactsAsZip, Export-BuildArtifactsAsNuget, Publish-NugetBuildArtifacts
