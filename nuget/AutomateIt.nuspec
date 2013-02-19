@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>AutomateIt</id>
-        <version>$version$</version>
+        <version>1.0.0</version>
         <title>AutomateIt</title>
         <authors>Allan Hardy</authors>
         <owners>Allan Hardy</owners>
@@ -18,12 +18,14 @@
         <file src="..\core\ps-modules\common-utils.psm1" target="tools\core\ps-modules\common-utils.psm1" />
         <file src="..\core\ps-modules\env.psm1" target="tools\core\ps-modules\env.psm1" />
         <file src="..\core\ps-modules\host-file.psm1" target="tools\core\ps-modules\host-file.psm1" />
+        <file src="..\core\ps-modules\ICSharpCode.SharpZipLib.dll" target="tools\core\ps-modules\ICSharpCode.SharpZipLib.dll" />
         <file src="..\core\ps-modules\local-webboostrap.psm1" target="tools\core\ps-modules\local-webboostrap.psm1" />
         <file src="..\core\ps-modules\module-extensions.psm1" target="tools\core\ps-modules\module-extensions.psm1" />
         <file src="..\core\ps-modules\msbuild.psm1" target="tools\core\ps-modules\msbuild.psm1" />
+        <file src="..\core\ps-modules\PowerZip.psd1" target="tools\core\ps-modules\PowerZip.psd1" />
+        <file src="..\core\ps-modules\PowerZip.psm1" target="tools\core\ps-modules\PowerZip.psm1" />
         <file src="..\core\ps-modules\semver.psm1" target="tools\core\ps-modules\semver.psm1" />
         <file src="..\core\ps-modules\test.psm1" target="tools\core\ps-modules\test.psm1" />
-        <file src="..\core\ps-modules\windows-zip.psm1" target="tools\core\ps-modules\windows-zip.psm1" />
         <file src="..\sample-scripts\applicationhost.config" target="tools\sample\applicationhost.config" />
         <file src="..\sample-scripts\build-config.ps1" target="tools\sample\build-config.ps1" />
         <file src="..\sample-scripts\build-default.ps1" target="tools\sample\build-default.ps1" />
