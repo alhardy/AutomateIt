@@ -1,4 +1,5 @@
 # TODO: Add member for VSTest.Console.exe - http://msdn.microsoft.com/en-us/library/vstudio/jj155796.aspx
+$scriptPath = Split-Path -parent $MyInvocation.MyCommand.Definition
 
 function Write-Test([string] $message) {
 	Write-Host "[Test] $message" -f Green
@@ -6,17 +7,6 @@ function Write-Test([string] $message) {
 
 function Throw-MsBuildError([string] $message) {
 	throw "[Test] $message"
-}
-
-
-$availableModules = Get-Module -ListAvailable
-
-if (-not($availableModules | where {$_.Name -eq "common-utils" })) {
-	Throw-TestError "Could not find module dependency. Install common-utils"	
-}
-
-if (-not(Get-Module common-utils)) {
-	Import-Module common-utils
 }
 
 function Start-MsTest {
@@ -28,6 +18,8 @@ function Start-MsTest {
 				[string]$TestSettings, 
 				[string]$TestRunSettings				
 			 )
+
+	Import-Module $scriptPath\common-utils.psm1
 
 	$vsInstallPath = Get-VsInstallPath $vsVersion
 	$msTestExe = dir "$vsInstallPath\mstest.exe"
@@ -71,6 +63,8 @@ function Start-MsTest {
 	Write-Test "Executing $command"
 
 	Invoke-Expression "& $command"
+
+	Remove-Module [c]ommon-utils
 }
 
 Export-ModuleMember Start-MsTest

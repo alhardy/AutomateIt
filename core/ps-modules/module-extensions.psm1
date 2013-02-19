@@ -3,12 +3,12 @@ function Confirm-PsGetIsInstall{
 
 	if (-not($availableModules | where {$_.Name -eq "PsGet" })) {
 		Write-Warning "Downloading PsGet"
+		Write-Warning "Downloading PsGet"
 		$proxy = [System.Net.WebRequest]::GetSystemWebProxy()
 		$proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
 		$wc = new-object system.net.WebClient
 		$wc.proxy = $proxy
 		$wc.DownloadString("http://psget.net/GetPsGet.ps1") | iex
-		$GotLatestPsGet = $True
 	}
 
 	if (-not(Get-Module PsGet)) {

@@ -31,5 +31,5 @@ $global:buildNumberEnv = "bamboo.buildNumber"
 $global:buildTimeStampEnv = "bamboo.buildTimeStamp"
 
 #netfx and visual studio
-$global:vsVersion = "10.0" # used to determin mstest installation path
+$global:vsVersion = "11.0" # used to determin mstest installation path
 $global:netfxVersion = "v4.0.30319" # used to determine msbuild installation path
