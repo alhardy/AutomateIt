@@ -20,6 +20,10 @@ function Start-MsBuild{
 
 	Import-Module $scriptPath\common-utils.psm1
 
+	if(-not($netfxVersion)){
+		$netfxVersion = "v4.0.30319"
+	}
+
 	$netfxCurrent = Get-NetFxCurrent $netfxVersion
 	$msbuildExe = dir "$netfxCurrent\msbuild.exe"
 
@@ -35,4 +39,33 @@ function Start-MsBuild{
 	Remove-Module [c]ommon-utils
 }
 
-Export-ModuleMember Start-MsBuild
+function Start-LocalMsBuild {
+	param(
+			[parameter(Mandatory=$true)]
+			[string[]]$ProjectsOrSolutions
+		)
+
+	Import-Module $scriptPath\common-utils.psm1
+
+	if(-not($netfxVersion)){
+		$netfxVersion = "v4.0.30319"
+	}
+
+	$netfxCurrent = Get-NetFxCurrent $netfxVersion
+	$msbuildExe = dir "$netfxCurrent\msbuild.exe"
+
+	if (-not(Test-Path($msbuildExe))) { Throw-MsBuildError "Could not locate msbuild executable at $MsBuildExe" }
+
+	Write-MsBuildInfo "Building $Solutions"
+
+	$ProjectsOrSolutions | % {
+		Write-MsBuildInfo "hello $_"
+		$solution = dir $_						
+		exec { &$msbuildExe $solution /target:Rebuild /m:4 /p:Configuration=Debug}
+	}
+
+	Remove-Module [c]ommon-utils
+
+}
+
+Export-ModuleMember Start-MsBuild, Start-LocalMsBuild

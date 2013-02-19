@@ -10,16 +10,35 @@ function getNugetAccessKey() {
 }
 
 function Initialize-Build {
-	Write-Host "Initialising build..."  
+    Write-Host "Initialising build..."  
         
-    if (Test-Path $outputDirectory){ Remove-Item -Force -recurse $outputDirectory -ErrorAction SilentlyContinue }		
-	New-Item $outputDirectory, $artifactsDirectory, $publishedWebsitesDirectory, $publishedApplicationsDirectory, $testResultsDirectory -type directory	
+    if (Test-Path $outputDirectory){ Remove-Item -Force -recurse $outputDirectory -ErrorAction SilentlyContinue }       
+    New-Item $outputDirectory, $artifactsDirectory, $publishedWebsitesDirectory, $publishedApplicationsDirectory, $testResultsDirectory -type directory 
+}
+
+function Version-Build {
+    Write-Host "Versioning..."   
+    
+    Import-Module $scriptPath\semver.psm1
+
+    $BuildNumber = 0
+    if ((Test-Path env:$buildNumberEnv)){
+        $BuildNumber = (Get-Item env:$buildNumberEnv).Value
+        Set-GlobalAssemblyFileVersion -BuildVersion $BuildNumber -Directory $globalAssemblyInfoFile
+    }
+    if ((Test-Path env:$buildTimeStampEnv)){
+        $BuildNumber += "." + (Get-Item env:$buildTimeStampEnv).Value
+    }
+
+    Set-GlobalAssemblyInfoBuildVersion -BuildVersion $BuildNumber -Directory $globalAssemblyInfoFile 
+
+    Remove-Module [s]emver
 }
 
 function Set-BuildVersion {
     Write-Host "Versioning..."   
     
-    Import-Module .\semver.psm1
+    Import-Module $scriptPath\semver.psm1
 
     $BuildNumber = 0
     if ((Get-Item env:$buildNumberEnv).Value){
@@ -44,16 +63,16 @@ function Test-Build {
             [string]$TestSettings, 
             [string]$TestRunSettings                
          )
-	Write-Host "Testing build..."
+    Write-Host "Testing build..."
 
-    Import-Module .\test.psm1
+    Import-Module $scriptPath\test.psm1
 
-	Start-MsTest -TestAssembliesPatterns $TestAssembliesPatterns -TestResultsFile $TestResultsFile -TestSettings $TestSettings -TestRunSettings $TestRunSettings
+    Start-MsTest -TestAssembliesPatterns $TestAssembliesPatterns -TestResultsFile $TestResultsFile -TestSettings $TestSettings -TestRunSettings $TestRunSettings
 
     Remove-Module [t]est
 }
 
-function Start-Build {	
+function Start-Build {  
     param(
             [parameter(Mandatory=$true)] 
             [string[]]$Solutions, 
@@ -62,11 +81,11 @@ function Start-Build {
             [string]$BuildConfiguration="Release",              
             [bool]$RunCodeAnalysis=$True                
          )  
-	Write-Host "Building..."
+    Write-Host "Building..."
 
-    Import-Module .\msbuild.psm1
+    Import-Module $scriptPath\msbuild.psm1
 
-	Start-MsBuild -Solutions $Solutions -OutDir $OutDir -BuildConfiguration $BuildConfiguration -RunCodeAnalysis $RunCodeAnalysis
+    Start-MsBuild -Solutions $Solutions -OutDir $OutDir -BuildConfiguration $BuildConfiguration -RunCodeAnalysis $RunCodeAnalysis
 
     Remove-Module [m]sbuild
 }
@@ -89,10 +108,10 @@ function Export-BuildArtifacts {
 
     if(-not($Version)) { Write-Error "Cannot package nupkgs, version information is missing" }
     
-    Import-Module .\artifacts.psm1
+    Import-Module $scriptPath\artifacts.psm1
 
 
-	Export-Artifacts -ParentDirectoryContainingCompiledApplications $PublishedApplicationsDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $Version
+    Export-Artifacts -ParentDirectoryContainingCompiledApplications $PublishedApplicationsDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $Version
     Export-Artifacts -ParentDirectoryContainingCompiledApplications $PublishedWebsitesDirectory -NuspecDirectory $NuspecDirectory -OutputDirectory $OutputDirectory -Version $Version    
 
     Remove-Module [a]rtifacts
@@ -105,11 +124,11 @@ function Publish-BuildArtifacts {
             [parameter(Mandatory=$true)]
             [string]$ArtifactDirectory
         )
-	Write-Host "Publishing to deployment artifact server..." 
+    Write-Host "Publishing to deployment artifact server..." 
 
     $nugetAccessKey = getNugetAccessKey($nugetAccessKeyPath)
 
-    Import-Module .\artifacts.psm1
+    Import-Module $scriptPath\artifacts.psm1
 
     if($nugetAccessKey){
         Publish-Artifacts -AccessKey $nugetAccessKey -Source $Source -ArtifactDirectory $ArtifactDirectory
@@ -120,4 +139,4 @@ function Publish-BuildArtifacts {
     Remove-Module [a]rtifacts
 }
 
-Export-ModuleMember Initialize-Build, Set-BuildVersion, Test-Build, Start-Build, Export-BuildArtifacts, Publish-BuildArtifacts
+Export-ModuleMember Initialize-Build, Version-Build, Set-BuildVersion, Test-Build, Start-Build, Export-BuildArtifacts, Publish-BuildArtifacts

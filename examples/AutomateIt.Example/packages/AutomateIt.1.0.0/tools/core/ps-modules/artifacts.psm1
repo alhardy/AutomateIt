@@ -10,10 +10,13 @@ function Throw-ArtifactError([string] $message) {
 	exec { cmd /c exit (1) }
 }
 
-if (-not(Test-Path "$nugetExe")){
+if (-not(Test-Path "$nugetExe")){	
 	Write-Artifact "Downloading nuget.exe to $nugetExe"
-	#TODO: Add default network credentails
-	(New-Object Net.WebClient).DownloadFile("https://nuget.org/nuget.exe", "$nugetExe")
+	$proxy = [System.Net.WebRequest]::GetSystemWebProxy()
+	$proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+	$wc = new-object system.net.WebClient
+	$wc.proxy = $proxy
+	$wc.DownloadFile("https://nuget.org/nuget.exe", "$nugetExe")
 }
 
 function Export-Artifacts{

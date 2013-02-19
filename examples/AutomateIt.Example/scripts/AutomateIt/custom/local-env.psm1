@@ -16,6 +16,7 @@ function Set-Environment{
 	Import-Module -Name $psModuleRoot\env.psm1 -Verbose -Force
 
 	$envConfigs = "$ProjectPath\_Config\$Env\*"
+	
 
 	if (Test-Path $envConfigs){
 		$configsForEnv = Resolve-Path $envConfigs

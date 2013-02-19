@@ -12,20 +12,27 @@
         <summary>Powershell Scripts that help automate builds, testing, deployment and configuration management</summary>
     </metadata>
     <files>
-        <file src="..\core\build\default.ps1" target="tools\core\build\default.ps1" />
-        <file src="..\core\build\utils.ps1" target="tools\core\build\utils.ps1" />
         <file src="..\core\msbuild\CopyToPublishedApplications.msbuild" target="tools\core\msbuild\CopyToPublishedApplications.msbuild" />
         <file src="..\core\ps-modules\artifacts.psm1" target="tools\core\ps-modules\artifacts.psm1" />
+        <file src="..\core\ps-modules\build-it.psm1" target="tools\core\ps-modules\build-it.psm1" />
         <file src="..\core\ps-modules\common-utils.psm1" target="tools\core\ps-modules\common-utils.psm1" />
         <file src="..\core\ps-modules\env.psm1" target="tools\core\ps-modules\env.psm1" />
         <file src="..\core\ps-modules\host-file.psm1" target="tools\core\ps-modules\host-file.psm1" />
+        <file src="..\core\ps-modules\local-webboostrap.psm1" target="tools\core\ps-modules\local-webboostrap.psm1" />
         <file src="..\core\ps-modules\module-extensions.psm1" target="tools\core\ps-modules\module-extensions.psm1" />
         <file src="..\core\ps-modules\msbuild.psm1" target="tools\core\ps-modules\msbuild.psm1" />
+        <file src="..\core\ps-modules\semver.psm1" target="tools\core\ps-modules\semver.psm1" />
         <file src="..\core\ps-modules\test.psm1" target="tools\core\ps-modules\test.psm1" />
-		<file src="..\core\ps-modules\semver.psm1" target="tools\core\ps-modules\semver.psm1" />
+        <file src="..\core\ps-modules\windows-zip.psm1" target="tools\core\ps-modules\windows-zip.psm1" />
+        <file src="..\sample-scripts\applicationhost.config" target="tools\sample\applicationhost.config" />
         <file src="..\sample-scripts\build-config.ps1" target="tools\sample\build-config.ps1" />
+        <file src="..\sample-scripts\build-default.ps1" target="tools\sample\build-default.ps1" />
         <file src="..\sample-scripts\build.ps1" target="tools\sample\build.ps1" />
         <file src="..\sample-scripts\local-env.psm1" target="tools\sample\local-env.psm1" />
-        <file src="tools\installIt.ps1" target="tools\installIt.ps1" />        
+        <file src="..\sample-scripts\localweb-default.ps1" target="tools\sample\localweb-default.ps1" />
+        <file src="..\sample-scripts\setup-local.ps1" target="tools\sample\setup-local.ps1" />
+        <file src="..\sample-scripts\user-config.ps1" target="tools\sample\user-config.ps1" />
+        <file src="..\sample-scripts\web-config.ps1" target="tools\sample\web-config.ps1" />
+        <file src="tools\installIt.ps1" target="tools\installIt.ps1" />
     </files>
 </package>

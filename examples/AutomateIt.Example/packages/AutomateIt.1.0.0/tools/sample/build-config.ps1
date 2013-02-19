@@ -1,5 +1,5 @@
 #directory locations
-$global:baseDirectory =  Resolve-Path ../examples/AutomateIt.Example
+$global:baseDirectory =  Resolve-Path ../../../
 $global:outputDirectory = "$baseDirectory\out"    
 $global:publishedWebsitesDirectory = "$outputDirectory\_PublishedWebsites"
 $global:publishedApplicationsDirectory = "$outputDirectory\_PublishedApplications"
@@ -22,7 +22,7 @@ $global:nugetInstallSource = "http://local.nuget.com.au/nuget"
 
 #solution and build
 $global:solutions = @("$baseDirectory\*.sln")
-$global:globalAssemblyInfoFile = "$baseDirectory"
+$global:globalAssemblyInfoFile = "$baseDirectory\GlobalAssemblyInfo.cs"
 $global:buildConfiguration = "Release"
 $global:runCodeAnalaysis = $false
 
@@ -31,5 +31,5 @@ $global:buildNumberEnv = "bamboo.buildNumber"
 $global:buildTimeStampEnv = "bamboo.buildTimeStamp"
 
 #netfx and visual studio
-$global:vsVersion = "10.0" # used to determin mstest installation path
+$global:vsVersion = "11.0" # used to determin mstest installation path
 $global:netfxVersion = "v4.0.30319" # used to determine msbuild installation path
