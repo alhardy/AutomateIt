@@ -20,6 +20,10 @@ function Start-MsBuild{
 
 	Import-Module $scriptPath\common-utils.psm1
 
+	if(-not($netfxVersion)){
+		$netfxVersion = "v4.0.30319"
+	}
+
 	$netfxCurrent = Get-NetFxCurrent $netfxVersion
 	$msbuildExe = dir "$netfxCurrent\msbuild.exe"
 
@@ -43,6 +47,10 @@ function Start-LocalMsBuild {
 
 	Import-Module $scriptPath\common-utils.psm1
 
+	if(-not($netfxVersion)){
+		$netfxVersion = "v4.0.30319"
+	}
+
 	$netfxCurrent = Get-NetFxCurrent $netfxVersion
 	$msbuildExe = dir "$netfxCurrent\msbuild.exe"
 
@@ -51,6 +59,7 @@ function Start-LocalMsBuild {
 	Write-MsBuildInfo "Building $Solutions"
 
 	$ProjectsOrSolutions | % {
+		Write-MsBuildInfo "hello $_"
 		$solution = dir $_						
 		exec { &$msbuildExe $solution /target:Rebuild /m:4 /p:Configuration=Debug}
 	}

@@ -1,5 +1,5 @@
 function Write-HFile([string] $message) {
-	Write-Host "[Test] $message" -f Blue
+	Write-Host "[Host-File] $message" -f Blue
 }
 
 function Add-HostEntry{
