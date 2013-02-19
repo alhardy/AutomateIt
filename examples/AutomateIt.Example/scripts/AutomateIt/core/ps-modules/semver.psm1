@@ -1,5 +1,14 @@
 #Reference http://semver.org/
 
+function Write-Semver([string] $message) {
+	Write-Host "[Semver] $message" -f cyan
+}
+
+function Throw-SemverError([string] $message) {
+	Write-Host "[Semver-Error] $message" -f cyan
+	exec { cmd /c exit (1) }
+}
+
 function UpdateGlobalAssemblyInfo {
 	param(			
 			[parameter(Mandatory=$true)] 
@@ -25,7 +34,7 @@ function UpdateGlobalAssemblyInfo {
 		Remove-Item $currentFile
 		Rename-Item $tempFile $currentFile
  
-		Write-Host "Updated $Name version to: $VersionString in $currentFile"
+		Write-Semver "Updated $Name version to: $VersionString in $currentFile"
 	}
 }
 
@@ -51,7 +60,7 @@ function Get-GlobalAssemblyInfoVersion {
 		 	[string]$Directory = (Resolve-Path .)	 	
 		 )
  	
-	$versionPattern = 'AssemblyVersion\("([0-9])+\.([0-9])+\.([0-9])"\)' 
+	$versionPattern = 'AssemblyVersion\("([0-9]+)+\.([0-9]+)+\.([0-9]+)"\)' 	
 	$fileName = "GlobalAssemblyInfo.cs" 
 	$assemblyInfo = Get-ChildItem $Directory -Recurse | 
 						Where-Object {$_.Name -eq $fileName} | 
@@ -76,6 +85,40 @@ function Get-GlobalAssemblyInfoVersion {
 	}
 }
 
+function Get-GlobalAssemblyInfoFileVersionString {
+	param(
+		 	[string]$Directory = (Resolve-Path .)	 	
+		 )
+ 	
+	$versionPattern = 'AssemblyFileVersion\("([0-9]+)+\.([0-9]+)+\.([0-9]+)+\.([0-9]+)"\)' 
+	$fileName = "GlobalAssemblyInfo.cs" 
+	$assemblyInfo = Get-ChildItem $Directory -Recurse | 
+						Where-Object {$_.Name -eq $fileName} | 
+						Select-Object -First 1
+ 
+	if(!$assemblyInfo) { throw "Could not find assembly info file" }
+ 
+	$matchedLine = Get-Content $assemblyInfo.FullName |
+					   Where-Object { $_ -match $versionPattern } |
+					   Select-Object -First 1
+ 
+	if(!$matchedLine) { throw "Could not find line containing assembly version in assembly info file" }					   
+ 
+	$major, $minor, $patch, $revision = ([regex]$versionPattern).matches($matchedLine) |
+										  foreach {$_.Groups } | 
+										  Select-Object -Skip 1
+ 
+	$version = New-Object PSObject -Property @{
+		Major = $major.Value
+		Minor = $minor.Value		
+		Patch = $patch.Value
+		Revision = $revision.Value		
+	}
+ 
+	$versionString = $version.Major + "." + $version.Minor + "." + $version.Patch + "." + $version.Revision
+	return $versionString	
+}
+
 function Get-GlobalAssemblyInfoVersionString {
 	param(
 		 	[string]$Directory = (Resolve-Path .)	 	
@@ -89,7 +132,7 @@ function Get-GlobalAssemblyInfoVersionString {
 function Set-GlobalAssemblyInfoBuildVersion {
 	param(
 			[parameter(Mandatory=$true)] 
-			[string] $BuildVersion,
+			[string]$BuildVersion,
 			[string]$Directory = (Resolve-Path .)
 		 )
  
@@ -144,7 +187,7 @@ function Bump-Version {
 	   $bumpedVersion.Minor -eq $version.Minor -and
 	   $bumpedVersion.Patch -eq $version.Patch)
 	{
-		Write-Host "Version didn't change"
+		Write-Semver "Version didn't change"
 	}
  
 	Set-GlobalAssemblyInfoVersion -Directory $Directory -BumpedVersion $bumpedVersion
@@ -166,4 +209,4 @@ function Set-GlobalAssemblyInfoVersion{
 	UpdateGlobalAssemblyInfo -Directory $Directory -Pattern $assemblyFileVersionPattern -VersionString $version -Name "AssemblyFileVersion"
 }
 
-Export-ModuleMember Bump-Version, Get-GlobalAssemblyInfoVersionString, Get-GlobalAssemblyInfoVersion, Set-GloablAssemblyInfoVersion, Set-GlobalAssemblyInfoBuildVersion, Set-GlobalAssemblyFileVersion
+Export-ModuleMember Bump-Version, Get-GlobalAssemblyInfoVersionString, Get-GlobalAssemblyInfoFileVersionString, Get-GlobalAssemblyInfoVersion, Set-GloablAssemblyInfoVersion, Set-GlobalAssemblyInfoBuildVersion, Set-GlobalAssemblyFileVersion

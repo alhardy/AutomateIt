@@ -11,7 +11,7 @@ Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
 Import-Module -Name $psModuleRoot\module-extensions.psm1 -Verbose -Force
 Install-ModuleWithPsGet -Module psake -GetLatest:$ReInstallThirdPartyModules.IsPresent
 
-Invoke-Psake build-default.ps1 Test-It
+Invoke-Psake build-default.ps1 Zip-It
 
 Remove-Module [m]odule-extensions -ErrorAction SilentlyContinue
 Remove-Module [p]sake -ErrorAction SilentlyContinue

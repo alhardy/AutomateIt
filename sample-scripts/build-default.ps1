@@ -14,12 +14,16 @@ task Test-It -depends Build-It {
 	Test-Build -TestAssembliesPatterns $testAssemblyPattern -TestResultsFile $testResultsReport -TestSettings $mstestSettings -TestRunSettings $mstestRunSettings
 }
 
-task Package-It -depends Test-It {    
-    Export-BuildArtifacts -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory -Version $version
+task NugetPack-It -depends Test-It {    
+    Export-NugetArtifacts -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory -Version $version
+    Export-NugetArtifacts -PublishedApplicationsDirectory $publishedWebsitesDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory -Version $version
 }
 
-task PackageAndPush-It -depends Package-It {	
-    Publish-BuildArtifacts -AccessKey $nugetAccessKey -Source $nugetSource -ArtifactDirectory $artifactsDirectory
+task Zip-It -depends Test-It {
+	Export-ZipArtifacts -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -OutputDirectory $artifactsDirectory -Version $version	
+	Export-ZipArtifacts -PublishedApplicationsDirectory $publishedWebsitesDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -OutputDirectory $artifactsDirectory -Version $version
 }
 
-task PackageWithTestsAndPush-It -depends Test-It, PackageAndPush-It { }
+task NugetPackAndPush-It -depends Package-It {	
+    Publish-NugetArtifacts -AccessKey $nugetAccessKey -Source $nugetSource -ArtifactDirectory $artifactsDirectory
+}

@@ -14,12 +14,14 @@ task Test-It -depends Build-It {
 	Test-Build -TestAssembliesPatterns $testAssemblyPattern -TestResultsFile $testResultsReport -TestSettings $mstestSettings -TestRunSettings $mstestRunSettings
 }
 
-task Package-It -depends Test-It {    
-    Export-BuildArtifacts -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory -Version $version
+task NugetPack-It -depends Test-It {    
+    Export-BuildArtifactsAsNuget -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -NuspecDirectory $nugetSpecs -OutputDirectory $artifactsDirectory
 }
 
-task PackageAndPush-It -depends Package-It {	
-    Publish-BuildArtifacts -AccessKey $nugetAccessKey -Source $nugetSource -ArtifactDirectory $artifactsDirectory
+task Zip-It -depends Test-It {
+	Export-BuildArtifactsAsZip -PublishedApplicationsDirectory $publishedApplicationsDirectory -PublishedWebsitesDirectory $publishedWebsitesDirectory -OutputDirectory $artifactsDirectory	
 }
 
-task PackageWithTestsAndPush-It -depends Test-It, PackageAndPush-It { }
+task PackageAndNugetPush-It -depends NugetPack-It {	
+    Publish-NugetBuildArtifacts -AccessKey $nugetAccessKey -Source $nugetSource -ArtifactDirectory $artifactsDirectory
+}

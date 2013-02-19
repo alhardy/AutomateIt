@@ -1,4 +1,5 @@
 $base = Resolve-Path .
+$scriptPath = Split-Path -parent $MyInvocation.MyCommand.Definition
 $nugetExe = "$base\nuget.exe"
 
 function Write-Artifact([string] $message) {
@@ -10,16 +11,51 @@ function Throw-ArtifactError([string] $message) {
 	exec { cmd /c exit (1) }
 }
 
-if (-not(Test-Path "$nugetExe")){	
-	Write-Artifact "Downloading nuget.exe to $nugetExe"
-	$proxy = [System.Net.WebRequest]::GetSystemWebProxy()
-	$proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-	$wc = new-object system.net.WebClient
-	$wc.proxy = $proxy
-	$wc.DownloadFile("https://nuget.org/nuget.exe", "$nugetExe")
+function EnsureNugetExists(){
+	if (-not(Test-Path "$nugetExe")){	
+		Write-Artifact "Downloading nuget.exe to $nugetExe"
+		$proxy = [System.Net.WebRequest]::GetSystemWebProxy()
+		$proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+		$wc = new-object system.net.WebClient
+		$wc.proxy = $proxy
+		$wc.DownloadFile("https://nuget.org/nuget.exe", "$nugetExe")
+	}
 }
 
-function Export-Artifacts{
+function Export-ZipArtifacts{
+	param(
+			[parameter(Mandatory=$true)] 			
+			[string]$ParentDirectoryContainingCompiledApplications,			
+			[parameter(Mandatory=$true)]
+			[string]$OutputDirectory,
+			[parameter(Mandatory=$true)]
+			[string]$Version
+		 )	
+
+	if(-not(Test-Path $OutputDirectory)){Throw-ArtifactError "$OutputDirectory does not exist."}		
+
+	if (-not(Test-Path $ParentDirectoryContainingCompiledApplications)){
+		Write-Artifact "There are no applications to package in directory $ParentDirectoryContainingCompiledApplications"
+		return
+	}
+
+	Import-Module $scriptPath\PowerZip.psm1
+
+	$fc = New-Object -com scripting.filesystemobject
+    $folder = $fc.getfolder($ParentDirectoryContainingCompiledApplications)
+    Write-Artifact "Zipping applications in $ParentDirectoryContainingCompiledApplications"
+	foreach($app in $folder.subfolders) {									
+		Write-Artifact "Zipping" $app.Name "-version:" $Version
+		$appZipName = $app.Name, $Version, "zip" -Join "."
+		$zipFile = $OutputDirectory, $appZipName
+		New-Zip -Source $app.Path -ZipFile $zipFile -Recurse -DeleteAfterZip
+	}
+	Write-Artifact "Finished zipping applications in $ParentDirectoryContainingCompiledApplications"
+
+	Remove-Module [P]owerZip
+}
+
+function Export-NugetArtifacts{
 	param(
 			[parameter(Mandatory=$true)] 			
 			[string]$ParentDirectoryContainingCompiledApplications,
@@ -39,6 +75,8 @@ function Export-Artifacts{
 		return
 	}
 
+	EnsureNugetExists
+
 	$fc = New-Object -com scripting.filesystemobject
     $folder = $fc.getfolder($ParentDirectoryContainingCompiledApplications)
     Write-Artifact "Packing applications in $ParentDirectoryContainingCompiledApplications from nuget specs"
@@ -53,7 +91,7 @@ function Export-Artifacts{
 	Write-Artifact "Finished packing applications in $ParentDirectoryContainingCompiledApplications from nuget specs"
 }
 
-function Edit-ArtifactSpecsVersion {	
+function Edit-NugetArtifactSpecsVersion {	
 	param(
 			[parameter(Mandatory=$true)] 
 			[string]$NuspecDirectory,
@@ -73,7 +111,7 @@ function Edit-ArtifactSpecsVersion {
 	Write-Artifact "Nuget specs version successfully updated to $Version"
 }
 
-function Publish-Artifacts {		
+function Publish-NugetArtifacts {		
 	param(
 			[parameter(Mandatory=$true)] 
 			[string]$AccessKey,
@@ -81,9 +119,11 @@ function Publish-Artifacts {
 			[string]$Source,
 			[parameter(Mandatory=$true)]
 			[string]$ArtifactDirectory
-	 	)
+	 	)	
 
 	if(-not(Test-Path $ArtifactDirectory)){Throw-ArtifactError "Artifact directory $ArtifactDirectory does not exist."}	
+
+	EnsureNugetExists
 
 	Write-Artifact "Executing: $nugetExe setapikey $AccessKey -source $Source"
 	exec { &$nugetExe setapikey $AccessKey -source $Source }
@@ -93,7 +133,7 @@ function Publish-Artifacts {
 	}	
 }
 
-function Install-Artifact {
+function Install-NugetArtifact {
 	param(
 			[string]$Version,
 			[string]$Id,
@@ -105,8 +145,10 @@ function Install-Artifact {
 	
 	if(-not(Test-Path $OutputDirectory)){Throw-ArtifactError "OutputDirectory directory $OutputDirectory does not exist."}		
 
+	EnsureNugetExists
+
 	Write-Artifact "Executing: $nugetExe install $Id -Version $Version -OutputDirectory $OutputDirectory -Source $Source"
 	exec { &$nugetExe install $Id -Version $Version -OutputDirectory $OutputDirectory -Source $Source }
 }
 
-Export-ModuleMember Export-Artifacts, Edit-ArtifactSpecsVersion, Publish-Artifacts, Install-Artifact
+Export-ModuleMember Export-ZipArtifacts, Export-NugetArtifacts, Edit-NugetArtifactSpecsVersion, Publish-NugetArtifacts, Install-NugetArtifact
