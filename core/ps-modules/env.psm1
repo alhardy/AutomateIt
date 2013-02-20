@@ -52,13 +52,33 @@ function Set-SensitiveData {
  
 	$projectName = Split-Path $ProjectPath -Leaf -Resolve
 
-	if($Version){		
-		$ProjectPath = "$ProjectPath.$Version"
-	}	
+	if(-not($Version)){		
+		# Try to get version from the applications assembly
+		Get-ChildItem -Path $ProjectPath\bin -Filter *.dll | % {
+			$dllPath = Resolve-Path $ProjectPath\bin\$_
+			$dllName = $_ -Replace ".dll", ""
+			if($projectName.StartsWith($dllName)){
+				$Version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($dllPath).FileVersion
 
-	if($Version){
-		$projectName = $projectName -Replace ".$Version", ""
-	}		
+			}
+		}	  
+	}
+
+	if(-not($Version)){		
+		# Try to get version from the applications exe
+		Get-ChildItem -Path $ProjectPath -Filter *.exe | % {
+			$exePath = Resolve-Path $ProjectPath\$_
+			$exeName = $_ -Replace ".exe", ""
+			if($projectName.StartsWith($exeName)){
+				$Version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exePath).FileVersion
+
+			}
+		}	  
+	}
+
+	if($Version){		
+		$projectName = $projectName -Replace ".$Version", ""		
+	}			
 
 	$sensitiveData = Get-ChildItem -Path "$EnvPath" -Filter "$projectName*.sd"
 	if (-not($sensitiveData)){

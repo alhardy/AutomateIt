@@ -14,13 +14,12 @@ $envVarPath = Resolve-Path .\env
 
 Stop-IIS6WebSite -Name $websiteName
 
-if (Test-Path $envVarPath){        
-    Set-SensitiveData -ProjectPath $baseDir -Env $Env -EnvPath $envVarPath
+if (Test-Path $envVarPath){  	     	 
+	Set-SensitiveData -ProjectPath $baseDir -Env $Env -EnvPath $envVarPath 
 }   
 
 Update-IIS6WebsitePhysicalPath -Name $websiteName -PhysicalPath $baseDir
 Start-IIS6WebSite -Name $websiteName
-
 
 Remove-Module [i]is6 -ErrorAction SilentlyContinue
 Remove-Module [e]nv -ErrorAction SilentlyContinue
