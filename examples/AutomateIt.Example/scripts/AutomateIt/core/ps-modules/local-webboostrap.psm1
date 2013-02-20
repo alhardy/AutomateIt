@@ -57,12 +57,13 @@ function Set-LocalHosts {
 
 function Build-LocalSites {
 	Import-Module ..\core\ps-modules\msbuild.psm1
-
+	$projects = @()
 	$sitesKeys | % {	
 		$project = $SolutionRoot, $sites[$_].ProjectFile -Join '\'
-		$projects = @($project)
-		Start-LocalMsBuild -ProjectsOrSolutions $projects
+		$projects += @($project)
 	}
+
+	Start-LocalMsBuild -ProjectsOrSolutions $projects
 
 	Remove-Module [m]sbuild
 }

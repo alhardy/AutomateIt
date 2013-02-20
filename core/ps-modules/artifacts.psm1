@@ -42,8 +42,9 @@ function Export-ZipArtifacts{
 	Import-Module $scriptPath\PowerZip.psm1
 
 	$fc = New-Object -com scripting.filesystemobject
-    $folder = $fc.getfolder($ParentDirectoryContainingCompiledApplications)
-    Write-Artifact "Zipping applications in $ParentDirectoryContainingCompiledApplications"
+	$dir = Resolve-Path $ParentDirectoryContainingCompiledApplications
+    $folder = $fc.getfolder($dir)
+    Write-Artifact "Zipping applications in $dir"
 	foreach($app in $folder.subfolders) {									
 		Write-Artifact "Zipping $app.Name version: $Version"
 		$appZipName = $app.Name, $Version, "zip" -Join "."
@@ -51,7 +52,7 @@ function Export-ZipArtifacts{
 		Add-Type -Path "$scriptPath.\ICSharpCode.SharpZipLib.dll"
 		New-Zip -Source $app.Path -ZipFile $zipFile -Recurse
 	}
-	Write-Artifact "Finished zipping applications in $ParentDirectoryContainingCompiledApplications"
+	Write-Artifact "Finished zipping applications in $dir"
 
 	Remove-Module [P]owerZip
 }
