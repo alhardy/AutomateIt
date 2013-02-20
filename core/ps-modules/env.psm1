@@ -74,7 +74,7 @@ function Set-SensitiveData {
 			$projectConfigs += Get-ChildItem -Path "$ProjectPath\$_" -Filter "*.config"
 		}		
 	}				
-	Write-Env "SUBSTITUTING for project name: $projectName" -f blue	
+	Write-Env "SUBSTITUTING for project name: $projectName"
 
 	$sharedConfiguration = "$EnvPath\$SharedSdFileName.$Env.sd"
 	if (Test-Path $sharedConfiguration)	{
@@ -230,9 +230,7 @@ function Invoke-TransformConfigs {
 			[parameter(Mandatory=$true)] 
 			[string]$ProjectPath,								
 			[parameter(Mandatory=$true)] 
-			[string]$Env, 
-			[parameter(Mandatory=$true)] 
-			[string]$EnvPath,
+			[string]$Env, 			
 			[string]$Version = $null,
 			[parameter(Mandatory=$true)] 
 			[string]$ConfigTransformerPath
@@ -277,7 +275,7 @@ function Invoke-TransformConfigs {
 }
 
 function Write-Env([string] $message) {
-	Write-Host "[Env] $message" -f DarkBlue
+	Write-Host "[Env] $message" -f Cyan
 }
 
 Export-ModuleMember Set-EnvVariables, Invoke-TransformConfigs, Set-SensitiveData
