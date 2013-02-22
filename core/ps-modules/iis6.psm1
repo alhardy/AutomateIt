@@ -2,7 +2,7 @@ function Write-IIS6([string] $message) {
     Write-Host "[IIS6] $message" -f Magenta
 }
 
-function Throw-ArtifactError([string] $message) {
+function Throw-IIS6([string] $message) {
     Write-Host "[IIS6-Error] $message" -f Magenta
     exec { cmd /c exit (1) }
 }
@@ -34,7 +34,7 @@ function Start-IIS6WebSite {
         Write-IIS6 "Started website '$Name'"
     }
     else {
-        Write-IIS6 "Could not find website '$Name' to start"
+        Throw-IIS6 "Could not find website '$Name' to start"
     }
 }
 
@@ -54,7 +54,7 @@ function Stop-IIS6WebSite {
         Write-IIS6 "Stopped website '$Name'"
     }
     else {
-        Write-IIS6 "Could not find website '$Name' to stop"
+        Throw-IIS6 "Could not find website '$Name' to stop"
     }
 }
 
@@ -71,7 +71,7 @@ function Remove-IIS6WebSite {
         Write-IIS6 "Deleted website '$Name'"
     }
     else {
-        Write-IIS6 "Could not find website '$Name' to delete"
+        Throw-IIS6 "Could not find website '$Name' to delete"
     }
 }
 
@@ -152,6 +152,18 @@ function New-IIS6WebSite {
     Write-IIS6 "Created new website '$Name' pointing to '$Path'"
 }
 
+function Get-IIS6WebSitePhysicalPath {
+      param(
+            [parameter(Mandatory=$true)]   
+            [string]$Name            
+        )
+
+    $iis = [ADSI]"IIS://localhost/W3SVC"
+    $site = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $Name }
+    $path = [adsi]($site.psbase.path+"/ROOT")    
+    return $path.psbase.properties.path[0]
+}
+
 function Update-IIS6WebSitePhysicalPath {
     param(
             [parameter(Mandatory=$true)]   
@@ -163,9 +175,12 @@ function Update-IIS6WebSitePhysicalPath {
     $iis = [ADSI]"IIS://localhost/W3SVC"
     $site = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $Name }
     $path = [adsi]($site.psbase.path+"/ROOT")    
+    if (-not($path.psbase.properties.path[0])){
+        Throw-IIS6 "Could not find website '$Name'"
+    }
     $path.psbase.properties.path[0] = $PhysicalPath    
     $path.psbase.CommitChanges()
     Write-IIS6 "Updated Website '$Name' Physical Path to $PhysicalPath"    
 }
 
-Export-ModuleMember Start-IIS6WebSite, Stop-IIS6WebSite, Remove-IIS6WebSite, New-IIS6WebSite, Update-IIS6WebSitePhysicalPath
+Export-ModuleMember Start-IIS6WebSite, Stop-IIS6WebSite, Remove-IIS6WebSite, New-IIS6WebSite, Update-IIS6WebSitePhysicalPath, Get-IIS6WebSitePhysicalPath

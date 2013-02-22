@@ -9,10 +9,23 @@ Import-Module .\iis6.psm1
 Import-Module .\env.psm1
 
 $baseDir = Resolve-Path .\
-$websiteName = "testing"
+if ($Env -eq "production"){
+	$websiteName = "{iis website name goes here}"	
+} else{
+	$websiteName = "$Env.{iis website name goes here}"	
+}
+
 $envVarPath = Resolve-Path .\env
 
 Stop-IIS6WebSite -Name $websiteName
+
+$configDir = Join-Path $baseDir _Config\$Env
+
+if (-not(Test-Path $configDir)){
+	throw "Unable to copy environment configuration: $configDir does not exist."
+}
+
+Copy-Item -Path $configDir\* -Destination $baseDir -Recurse -Force
 
 if (Test-Path $envVarPath){  	     	 
 	Set-SensitiveData -ProjectPath $baseDir -Env $Env -EnvPath $envVarPath 
