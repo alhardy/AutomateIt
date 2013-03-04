@@ -1,6 +1,7 @@
 function Get-NetFxPath(){
 	$registryPath = "HKLM:\SOFTWARE\Microsoft\.NETFramework"
-	if (isSysWow64Os -eq false) {$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework"}
+	$isSysWow64Os = Get-IsSysWow64Os
+	if ($isSysWow64Os -eq $false) {$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework"}
    	$registryItem = Get-ItemProperty -path $registryPath -name InstallRoot
    	return $registryItem.InstallRoot
 }
@@ -10,8 +11,9 @@ function Get-VsInstallPath(){
 				[parameter(Mandatory=$true)] 
 				[string]$VsVersion
 			 )
+	$isSysWow64Os = Get-IsSysWow64Os
 	$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\$VsVersion"
-	if (isSysWow64Os -eq false) {$registryPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\$VsVersion"}
+	if ($isSysWow64Os -eq $false) {$registryPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\$VsVersion"}
 	$registryItem = Get-ItemProperty -path $registryPath -name InstallDir
 	return $registryItem.InstallDir
 }

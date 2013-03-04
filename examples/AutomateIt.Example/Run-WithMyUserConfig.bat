@@ -1,0 +1,1 @@
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%~dp0scripts\AutomateIt\custom\setup-local.ps1' %*;"

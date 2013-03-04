@@ -58,8 +58,7 @@ function Start-LocalMsBuild {
 
 	Write-MsBuildInfo "Building $Solutions"
 
-	$ProjectsOrSolutions | % {
-		Write-MsBuildInfo "hello $_"
+	$ProjectsOrSolutions | % {		
 		$solution = dir $_						
 		exec { &$msbuildExe $solution /target:Rebuild /m:4 /p:Configuration=Debug}
 	}

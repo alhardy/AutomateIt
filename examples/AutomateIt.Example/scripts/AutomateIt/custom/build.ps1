@@ -1,9 +1,10 @@
 param(
         [switch]$ReInstallThirdPartyModules # Downloads latest third party modules and re-installs
      )
-$psModuleRoot = Resolve-Path ..\core\ps-modules
+$scriptsBaseDir = Resolve-Path ..\core\ps-modules
+$psModuleRoot = Resolve-Path $scriptsBaseDir\core\ps-modules
 
-. .\build-config.ps1
+. $scriptsBaseDir\custom\build-config.ps1
 
 Remove-Module [b]uild-it -ErrorAction SilentlyContinue
 Import-Module $psModuleRoot\build-it.psm1

@@ -1,7 +1,7 @@
 $sites = @{
 	AutomateItWeb = @{
 		IPAddress = "127.0.0.1";
-		HostHeader = "dev.automateit.com.au";				
+		HostHeaders = @("dev.automateit.com.au");
 		ProjectFile = "AutomateIt.Example.Web\AutomateIt.Example.Web.csproj";						
 		SiteName = "AutomateItWebExample";
 		ApplicationHostConfigSiteNameKey = "{AutomateItWebExampleSiteName}";			
@@ -10,7 +10,7 @@ $sites = @{
 	};
 	AutomateItWebTwo = @{
 		IPAddress = "127.0.0.1";
-		HostHeader = "dev.automateittwo.com.au";				
+		HostHeaders = @("dev.automateittwo.com.au");
 		ProjectFile = "AutomateIt.Example.WebTwo\AutomateIt.Example.WebTwo.csproj";						
 		SiteName = "AutomateItWebTwoExample";
 		ApplicationHostConfigSiteNameKey = "{AutomateItWebTwoExampleSiteName}";			

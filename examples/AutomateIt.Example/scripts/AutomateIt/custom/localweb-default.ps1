@@ -1,3 +1,5 @@
+Load-UserAndWebConfigs -ScriptExecutionPath $scriptPath
+
 task Set-IISExpress {
 	"Starting Websites and Services..."
 	Start-LocalIISExpress

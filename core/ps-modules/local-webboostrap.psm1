@@ -30,10 +30,16 @@ function Start-LocalIISExpress {
 	$config = Get-Content .\applicationhost.config
 
 	$sitesKeys | % {	
-		$project = $SolutionRoot, $sites[$_].ProjectFile -Join '\'
+		$site = $sites[$_]
+		$project = $SolutionRoot, $site.ProjectFile -Join '\'
 		$path = Split-Path $project -Resolve					
-		$config = $config -Replace $sites[$_].ApplicationHostConfigPhysicalPathKey, $path -Replace $sites[$_].ApplicationHostConfigSiteNameKey, $sites[$_].SiteName -Replace $sites[$_].ApplicationHostConfigHostHeaderKey, $sites[$_].HostHeader 		
-	}	
+		$config = $config -Replace $site.ApplicationHostConfigPhysicalPathKey, $path -Replace $site.ApplicationHostConfigSiteNameKey, $site.SiteName
+		$site.HostHeaders | % {$i = 1} {
+			$currentKey = $site.ApplicationHostConfigHostHeaderKey -Replace "}", "$i}"						
+			$config = $config -Replace $currentKey, $_
+			$i++
+		}		
+	}		
 
 	Set-Content -Path .\applicationhost.user.config -value $config
 
@@ -49,7 +55,10 @@ function Set-LocalHosts {
 	Import-Module ..\core\ps-modules\host-file.psm1
 
 	$sites.Keys | % {
-		Add-HostEntry $sites[$_].IPAddress $sites[$_].HostHeader
+		$site = $sites[$_]
+		$sites[$_].HostHeaders | % {
+			Add-HostEntry $site.IPAddress $_
+		}		
 	}
 
 	Remove-Module [h]ost-file
