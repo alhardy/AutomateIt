@@ -59,4 +59,3 @@ env/*
 packages/*
 nuget.exe
 out/
-user-config.ps1
