@@ -1,0 +1,5 @@
+$global:ProjectRootPath = "{Root Repository Path}"
+$global:SolutionRoot = Resolve-Path $ProjectRootPath
+$global:Env = "dev"
+$global:EnvVarPath = Resolve-Path $solutionRoot\env
+$global:SitesToStart = @("{SiteOne}", "{SiteTwo}")
